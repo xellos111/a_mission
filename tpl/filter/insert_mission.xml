@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<p>
+    <file name="mission_srl" />
+    <file name="title" required="true" />
+    <file name="reward_tickets" required="true" type="number" />
+    <file name="condition_type" />
+    <file name="condition_count" />
+    <file name="reset_cycle" required="true" />
+    <file name="is_active" />
+</p>

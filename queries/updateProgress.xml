@@ -1,0 +1,14 @@
+<query id="updateProgress" action="update">
+    <tables>
+        <table name="a_mission_progress" />
+    </tables>
+    <columns>
+        <column name="progress_data" var="progress_data" />
+        <column name="is_completed" var="is_completed" />
+        <column name="last_updated" var="last_updated" />
+        <column name="completed_date" var="completed_date" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="progress_srl" var="progress_srl" notnull="notnull" />
+    </conditions>
+</query>

@@ -1,0 +1,13 @@
+<table name="a_mission_missions">
+    <column name="mission_srl" type="number" size="11" notnull="notnull" primary_key="true" auto_increment="true" />
+    <column name="title" type="varchar" size="250" notnull="notnull" />
+    <column name="description" type="text" />
+    <column name="mission_type" type="text" notnull="notnull" comment="Comma separated trigger types e.g loop,write_doc" />
+    <column name="conditions" type="text" notnull="notnull" comment="JSON requirements e.g {login:1, write_doc:3}" />
+    <column name="reward_tickets" type="number" size="11" default="1" notnull="notnull" />
+    <column name="reset_cycle" type="varchar" size="20" default="daily" notnull="notnull" />
+    <column name="start_date" type="date" />
+    <column name="end_date" type="date" />
+    <column name="is_active" type="char" size="1" default="Y" notnull="notnull" index="idx_is_active" />
+    <column name="regdate" type="date" />
+</table>

@@ -1,0 +1,10 @@
+<query id="insertTicketWallet" action="insert">
+    <tables>
+        <table name="a_mission_tickets" />
+    </tables>
+    <columns>
+        <column name="member_srl" var="member_srl" />
+        <column name="ticket_count" var="ticket_count" />
+        <column name="last_update" var="last_update" default="curdate()" />
+    </columns>
+</query>

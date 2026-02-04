@@ -1,0 +1,185 @@
+<include target="_header.html" />
+
+<div class="am_dashboard">
+    <!-- Ticket Wallet -->
+    <div class="am_wallet_card">
+        <h2>내 티켓</h2>
+        <div class="ticket_count">
+            <span class="count">{$my_ticket_count}</span> <span class="unit">장</span>
+        </div>
+        <a href="{getUrl('act','dispAMissionGame')}" class="x_btn x_btn-success x_btn-large">게임하러 가기 &raquo;</a>
+    </div>
+
+    <!-- Mission List -->
+    <div class="am_mission_list">
+        <h3>도전 가능한 미션</h3>
+
+        <div loop="$mission_list => $mission"
+            class="am_mission_item <!--@if($mission->progress && $mission->progress->is_completed=='Y')-->completed<!--@end-->">
+            <div class="mission_header">
+                <span class="badge_cycle">
+                    <!--@if($mission->reset_cycle=='daily')-->[일일]
+                    <!--@elseif($mission->reset_cycle=='weekly')-->[주간]
+                    <!--@else-->[이벤트]<!--@end-->
+                </span>
+                <span class="mission_title">{$mission->title}</span>
+                <span class="reward_badge">🎁 티켓 {$mission->reward_tickets}장</span>
+            </div>
+
+            <div class="mission_conditions">
+                <div loop="$mission->conditions => $type, $target" class="condition_row">
+                    {@
+                    $target_count = is_array($target) ? $target['count'] : $target;
+                    $current_count = isset($mission->current_data[$type]) ? $mission->current_data[$type] : 0;
+                    $percent = min(100, ($current_count / $target_count) * 100);
+                    }
+                    <div class="cond_info">
+                        <span class="cond_name">
+                            <!--@if($type=='login')-->로그인
+                            <!--@elseif($type=='write_doc')-->글 쓰기
+                            <!--@elseif($type=='write_comment')-->댓글 쓰기
+                            <!--@elseif($type=='vote_up')-->추천 하기
+                            <!--@else-->{$type}<!--@end-->
+                        </span>
+                        <span class="cond_status">{$current_count} / {$target_count}</span>
+                    </div>
+                    <div class="progress_bar">
+                        <div class="bar_fill" style="width:{$percent}%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mission_footer">
+                <!--@if($mission->progress && $mission->progress->is_completed=='Y')-->
+                <button class="x_btn disabled" disabled>✔ 완료됨</button>
+                <span class="complete_date">({zdate($mission->progress->completed_date, "H:i")})</span>
+                <!--@else-->
+                <button class="x_btn x_btn-primary disabled" disabled>진행 중</button>
+                <!--@end-->
+            </div>
+        </div>
+
+        <div cond="!$mission_list" class="no_mission">
+            현재 진행 중인 미션이 없습니다.
+        </div>
+    </div>
+</div>
+
+<style>
+    .am_dashboard {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: sans-serif;
+    }
+
+    .am_wallet_card {
+        background: #333;
+        color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .am_wallet_card h2 {
+        margin: 0;
+        font-size: 16px;
+        opacity: 0.8;
+        font-weight: normal;
+        color: #ddd;
+    }
+
+    .am_wallet_card .ticket_count {
+        font-size: 48px;
+        font-weight: bold;
+        margin: 10px 0 20px;
+        color: #fff;
+    }
+
+    .am_wallet_card .ticket_count .unit {
+        font-size: 20px;
+    }
+
+    .am_mission_item {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        transition: opacity 0.3s;
+    }
+
+    .am_mission_item.completed {
+        opacity: 0.6;
+        background: #f9f9f9;
+    }
+
+    .mission_header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .badge_cycle {
+        color: #888;
+        margin-right: 5px;
+        font-size: 13px;
+    }
+
+    .mission_title {
+        font-size: 18px;
+        font-weight: bold;
+        flex-grow: 1;
+        color: #333;
+    }
+
+    .reward_badge {
+        background: #fdf2d0;
+        color: #e6a23c;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .condition_row {
+        margin-bottom: 10px;
+    }
+
+    .cond_info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        margin-bottom: 4px;
+        color: #555;
+    }
+
+    .progress_bar {
+        height: 8px;
+        background: #eee;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .bar_fill {
+        height: 100%;
+        background: #409eff;
+        transition: width 0.3s ease;
+    }
+
+    .am_mission_item.completed .bar_fill {
+        background: #67c23a;
+    }
+
+    .mission_footer {
+        text-align: right;
+        margin-top: 15px;
+    }
+
+    .complete_date {
+        color: #888;
+        font-size: 12px;
+    }
+</style>

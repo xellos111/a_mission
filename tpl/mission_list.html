@@ -1,0 +1,76 @@
+<include target="header.html" />
+
+<div class="x_panel">
+    <div class="x_panel-body">
+        <table class="x_table x_table-striped x_table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">미션 제목</th>
+                    <th scope="col">종류 (Trigger)</th>
+                    <th scope="col">보상 (티켓)</th>
+                    <th scope="col">초기화</th>
+                    <th scope="col">사용 여부</th>
+                    <th scope="col">등록일</th>
+                    <th scope="col">관리</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr loop="$mission_list => $no, $mission">
+                    <td>{$mission->mission_srl}</td>
+                    <td><a
+                            href="{getUrl('act','dispAMissionAdminInsert','mission_srl',$mission->mission_srl)}">{$mission->title}</a>
+                    </td>
+                    <td>
+                        <span class="x_label x_label-info">{$mission->mission_type}</span>
+                    </td>
+                    <td>{$mission->reward_tickets}</td>
+                    <td>
+                        <!--@if($mission->reset_cycle == 'daily')-->매일
+                        <!--@elseif($mission->reset_cycle == 'weekly')-->매주
+                        <!--@else-->없음 (1회성)<!--@end-->
+                    </td>
+                    <td>
+                        <span class="x_label x_label-success" |cond="$mission->is_active=='Y'">ON</span>
+                        <span class="x_label x_label-danger" |cond="$mission->is_active!='Y'">OFF</span>
+                    </td>
+                    <td>{zdate($mission->regdate,"Y-m-d")}</td>
+                    <td>
+                        <a href="{getUrl('act','dispAMissionAdminInsert','mission_srl',$mission->mission_srl)}"
+                            class="x_btn x_btn-mini">수정</a>
+                        <button type="button" class="x_btn x_btn-inverse x_btn-mini"
+                            onclick="deleteMission({$mission->mission_srl})">삭제</button>
+                    </td>
+                </tr>
+                <tr cond="!$mission_list">
+                    <td colspan="8" style="text-align:center">등록된 미션이 없습니다.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="x_clearfix">
+            <div class="x_pull-right">
+                <a href="{getUrl('act','dispAMissionAdminInsert','mission_srl','')}" class="x_btn x_btn-primary">미션
+                    등록</a>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="x_pagination" cond="$total_page > 1">
+            <a href="{getUrl('page','')}" class="direction">&laquo;</a>
+            <block loop="$page_no = $page_navigation->getNextPage()">
+                <strong cond="$page == $page_no">{$page_no}</strong>
+                <a cond="$page != $page_no" href="{getUrl('page',$page_no)}">{$page_no}</a>
+            </block>
+            <a href="{getUrl('page',$page_navigation->last_page)}" class="direction">&raquo;</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteMission(mission_srl) {
+        if (!confirm('정말 삭제하시겠습니까?')) return;
+        var params = { mission_srl: mission_srl };
+        exec_xml('a_mission', 'procAMissionAdminDeleteMission', params, function () { location.reload(); });
+    }
+</script>

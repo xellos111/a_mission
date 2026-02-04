@@ -1,0 +1,12 @@
+<query id="insertGameLog" action="insert">
+    <tables>
+        <table name="a_mission_game_log" />
+    </tables>
+    <columns>
+        <column name="game_srl" var="game_log_srl" filter="number" notnull="notnull" />
+        <column name="member_srl" var="member_srl" filter="number" notnull="notnull" />
+        <column name="spent_tickets" var="spent_tickets" filter="number" default="0" />
+        <column name="won_points" var="won_points" filter="number" default="0" />
+        <column name="regdate" var="regdate" default="curdate()" />
+    </columns>
+</query>

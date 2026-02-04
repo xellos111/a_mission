@@ -1,0 +1,14 @@
+<query id="insertProgress" action="insert">
+    <tables>
+        <table name="a_mission_progress" />
+    </tables>
+    <columns>
+        <column name="progress_srl" var="progress_srl" />
+        <column name="mission_srl" var="mission_srl" />
+        <column name="member_srl" var="member_srl" />
+        <column name="progress_data" var="progress_data" />
+        <column name="is_completed" var="is_completed" />
+        <column name="last_updated" var="last_updated" />
+        <column name="completed_date" var="completed_date" />
+    </columns>
+</query>

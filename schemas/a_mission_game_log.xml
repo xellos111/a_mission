@@ -1,0 +1,7 @@
+<table name="a_mission_game_log">
+    <column name="game_srl" type="number" size="11" notnull="notnull" primary_key="true" auto_increment="true" />
+    <column name="member_srl" type="number" size="11" notnull="notnull" index="idx_member_srl" />
+    <column name="spent_tickets" type="number" size="11" default="0" notnull="notnull" />
+    <column name="won_points" type="number" size="11" default="0" notnull="notnull" />
+    <column name="regdate" type="date" />
+</table>

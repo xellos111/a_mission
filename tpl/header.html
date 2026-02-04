@@ -1,0 +1,21 @@
+<!--%import("filter/insert_mission.xml")-->
+<h1 class="xeAdmin">A-Mission <span class="gray">Ver 1.0</span></h1>
+
+<ul class="x_nav x_nav-tabs">
+    <li class="x_active" |cond="$act=='dispAMissionAdminConfig'||$act=='dispAMissionAdminInsert'">
+        <a href="{getUrl('act','dispAMissionAdminConfig')}">미션 관리</a>
+    </li>
+    <!-- Future: Ticket Logs, Game Settings -->
+</ul>
+
+<style>
+    .am_condition_row {
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+</style>

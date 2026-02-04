@@ -1,0 +1,9 @@
+<table name="a_mission_progress">
+    <column name="progress_srl" type="number" size="11" notnull="notnull" primary_key="true" auto_increment="true" />
+    <column name="mission_srl" type="number" size="11" notnull="notnull" index="idx_mission_srl" />
+    <column name="member_srl" type="number" size="11" notnull="notnull" index="idx_member_srl" />
+    <column name="progress_data" type="text" comment="JSON current status e.g {login:1, write_doc:1}" />
+    <column name="is_completed" type="char" size="1" default="N" notnull="notnull" />
+    <column name="last_updated" type="date" />
+    <column name="completed_date" type="date" />
+</table>

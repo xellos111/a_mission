@@ -1,0 +1,12 @@
+<query id="updateTicketBalance" action="update">
+    <tables>
+        <table name="a_mission_tickets" />
+    </tables>
+    <columns>
+        <column name="ticket_count" var="ticket_count" />
+        <column name="last_update" var="last_update" default="curdate()" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="member_srl" var="member_srl" notnull="notnull" />
+    </conditions>
+</query>

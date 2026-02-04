@@ -1,0 +1,5 @@
+<table name="a_mission_tickets">
+    <column name="member_srl" type="number" size="11" notnull="notnull" primary_key="true" />
+    <column name="ticket_count" type="number" size="11" default="0" notnull="notnull" />
+    <column name="last_update" type="date" />
+</table>

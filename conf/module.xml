@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+    <actions>
+        <action name="dispAMissionAdminConfig" type="view" index="true" admin_index="true" standalone="true" />
+        <action name="dispAMissionAdminInsert" type="view" />
+        <action name="dispAMissionDashboard" type="view" index="true" />
+        <action name="dispAMissionGame" type="view" />
+        
+        <action name="procAMissionAdminInsertMission" type="controller" />
+        <action name="procAMissionAdminDeleteMission" type="controller" />
+        <action name="procAMissionPlayGame" type="controller" />
+    </actions>
+</module>
