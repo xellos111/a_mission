@@ -38,7 +38,20 @@
                     $val->target_mid) : $val->target_mid;
                     }
 
-                    // Fallback: Strip suffix if type matches key (e.g. write_doc_0 -> write_doc)
+                    /* Check array vs object */
+                    if(is_array($val)) {
+                    if(isset($val['type'])) $real_type = $val['type'];
+                    if(isset($val['count'])) $real_count = $val['count'];
+                    if(isset($val['target_mid'])) $real_target = is_array($val['target_mid']) ? implode(',',
+                    $val['target_mid']) : $val['target_mid'];
+                    } elseif(is_object($val)) {
+                    if(isset($val->type)) $real_type = $val->type;
+                    if(isset($val->count)) $real_count = $val->count;
+                    if(isset($val->target_mid)) $real_target = is_array($val->target_mid) ? implode(',',
+                    $val->target_mid) : $val->target_mid;
+                    }
+
+                    /* Fallback: Strip suffix if type matches key */
                     if(strpos($real_type, '_') !== false && preg_match('/_([0-9]+)$/', $real_type)) {
                     $real_type = preg_replace('/_([0-9]+)$/', '', $real_type);
                     }
