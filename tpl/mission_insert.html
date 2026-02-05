@@ -26,20 +26,22 @@
                     $real_count = $val;
                     $real_target = '';
 
-                    if(is_array($val)) {
-                    if(isset($val['type'])) $real_type = $val['type'];
-                    if(isset($val['count'])) $real_count = $val['count'];
-                    if(isset($val['target_mid'])) $real_target = is_array($val['target_mid']) ? implode(',',
-                    $val['target_mid']) : $val['target_mid'];
-                    } elseif(is_object($val)) {
-                    if(isset($val->type)) $real_type = $val->type;
-                    if(isset($val->count)) $real_count = $val->count;
-                    if(isset($val->target_mid)) $real_target = is_array($val->target_mid) ? implode(',',
-                    $val->target_mid) : $val->target_mid;
-                    }
+                    $v_type = is_array($val) ? ($val['type']??'') : (is_object($val) ? ($val->type??'') : '');
+                    $v_count = is_array($val) ? ($val['count']??'') : (is_object($val) ? ($val->count??'') : '');
+                    $v_target = is_array($val) ? ($val['target_mid']??'') : (is_object($val) ? ($val->target_mid??'') :
+                    '');
 
-                    if(strpos($real_type, '_') !== false && preg_match('/_([0-9]+)$/', $real_type)) {
-                    $real_type = preg_replace('/_([0-9]+)$/', '', $real_type);
+                    if($v_type) $real_type = $v_type;
+                    if($v_count) $real_count = $v_count;
+                    if($v_target) $real_target = is_array($v_target) ? implode(',', $v_target) : $v_target;
+
+                    if(strpos($real_type, '_') !== false) {
+                    $parts = explode('_', $real_type);
+                    $last = end($parts);
+                    if(is_numeric($last)) {
+                    array_pop($parts);
+                    $real_type = implode('_', $parts);
+                    }
                     }
                     }
                     <select name="condition_type[]">
@@ -55,46 +57,46 @@
                     <button type="button" class="x_btn x_btn-danger x_btn-mini"
                         onclick="removeCondition(this)">삭제</button>
                 </div>
-
-                <button type="button" class="x_btn" onclick="addCondition()">+ 조건 추가</button>
-                <span class="x_help-block">여러 조건을 추가하면 모두 달성해야 미션이 완료됩니다.</span>
             </div>
-        </div>
 
-        <div class="x_control-group">
-            <label class="x_control-label">보상 티켓</label>
-            <div class="x_controls">
-                <input type="number" name="reward_tickets"
-                    value="{$mission_info->reward_tickets ? $mission_info->reward_tickets : 1}" /> 장
-            </div>
+            <button type="button" class="x_btn" onclick="addCondition()">+ 조건 추가</button>
+            <span class="x_help-block">여러 조건을 추가하면 모두 달성해야 미션이 완료됩니다.</span>
         </div>
+    </div>
 
-        <div class="x_control-group">
-            <label class="x_control-label">초기화 주기</label>
-            <div class="x_controls">
-                <select name="reset_cycle">
-                    <option value="daily" selected|cond="$mission_info->reset_cycle=='daily'">매일 (00시 초기화)</option>
-                    <option value="weekly" selected|cond="$mission_info->reset_cycle=='weekly'">매주 (월요일 초기화 - 미구현)
-                    </option>
-                    <option value="none" selected|cond="$mission_info->reset_cycle=='none'">없음 (1회성)</option>
-                </select>
-            </div>
+    <div class="x_control-group">
+        <label class="x_control-label">보상 티켓</label>
+        <div class="x_controls">
+            <input type="number" name="reward_tickets"
+                value="{$mission_info->reward_tickets ? $mission_info->reward_tickets : 1}" /> 장
         </div>
+    </div>
 
-        <div class="x_control-group">
-            <label class="x_control-label">사용 여부</label>
-            <div class="x_controls">
-                <label class="x_inline"><input type="radio" name="is_active" value="Y"
-                        checked|cond="$mission_info->is_active!='N'" /> 사용함</label>
-                <label class="x_inline"><input type="radio" name="is_active" value="N"
-                        checked|cond="$mission_info->is_active=='N'" /> 사용 안 함</label>
-            </div>
+    <div class="x_control-group">
+        <label class="x_control-label">초기화 주기</label>
+        <div class="x_controls">
+            <select name="reset_cycle">
+                <option value="daily" selected|cond="$mission_info->reset_cycle=='daily'">매일 (00시 초기화)</option>
+                <option value="weekly" selected|cond="$mission_info->reset_cycle=='weekly'">매주 (월요일 초기화 - 미구현)</option>
+                <option value="none" selected|cond="$mission_info->reset_cycle=='none'">없음 (1회성)</option>
+            </select>
         </div>
+    </div>
 
-        <div class="x_clearfix btnArea">
-            <button type="submit" class="x_btn x_btn-primary">저장</button>
-            <a href="{getUrl('act','dispAMissionAdminConfig')}" class="x_btn">취소</a>
+    <div class="x_control-group">
+        <label class="x_control-label">사용 여부</label>
+        <div class="x_controls">
+            <label class="x_inline"><input type="radio" name="is_active" value="Y"
+                    checked|cond="$mission_info->is_active!='N'" /> 사용함</label>
+            <label class="x_inline"><input type="radio" name="is_active" value="N"
+                    checked|cond="$mission_info->is_active=='N'" /> 사용 안 함</label>
         </div>
+    </div>
+
+    <div class="x_clearfix btnArea">
+        <button type="submit" class="x_btn x_btn-primary">저장</button>
+        <a href="{getUrl('act','dispAMissionAdminConfig')}" class="x_btn">취소</a>
+    </div>
 </form>
 
 <!-- Template Row for JS -->
