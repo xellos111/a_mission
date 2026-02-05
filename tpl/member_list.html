@@ -47,7 +47,7 @@
                     onclick="openTicketModal('{$val->member_srl}', '{$val->nick_name}', '{intval($val->ticket_count)}')">티켓
                     관리</button>
                 <button type="button" class="x_btn x_btn-mini"
-                    onclick="popopen('{getUrl('act','dispAMissionAdminMemberMissions','target_member_srl',$val->member_srl)}', 'MissionStatus'); return false;">미션
+                    onclick="popopen('{getUrl('','module','a_mission','act','dispAMissionAdminMemberMissions','target_member_srl',$val->member_srl)}', 'MissionStatus'); return false;">미션
                     현황</button>
             </td>
         </tr>
