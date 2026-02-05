@@ -129,9 +129,24 @@ class a_missionController extends a_mission
                 $target_req = $target_val['count'] ?? 1;
 
             // Check Extra Constraints (Board ID, etc.)
+            // 5-1. Check module_srl (Integer ID)
             if (is_array($target_val) && isset($extra_condition['module_srl']) && isset($target_val['module_srl'])) {
                 if (!in_array($extra_condition['module_srl'], $target_val['module_srl']))
                     continue;
+            }
+
+            // 5-2. Check target_mid (String ID, e.g., 'free')
+            if (is_array($target_val) && isset($extra_condition['module_srl']) && isset($target_val['target_mid'])) {
+                $oModuleModel = getModel('module');
+                $module_info = $oModuleModel->getModuleInfoByModuleSrl($extra_condition['module_srl']);
+                if ($module_info) {
+                    $current_mid = $module_info->mid;
+                    $target_mids = is_array($target_val['target_mid']) ? $target_val['target_mid'] : [$target_val['target_mid']];
+                    
+                    if (!in_array($current_mid, $target_mids)) {
+                        continue;
+                    }
+                }
             }
 
             // Increment Count
