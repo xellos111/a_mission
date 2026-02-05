@@ -58,12 +58,25 @@ class a_missionAdminController extends a_mission
         }
         $args->mission_type = implode(',', array_unique($types));
 
-        // 3. Insert or Update
-        if ($args->mission_srl) {
-            $output = executeQuery('a_mission.updateMission', $args);
+        // 3. Prepare Object for DB (Clean)
+        $obj = new stdClass();
+        $obj->mission_srl = $args->mission_srl;
+        $obj->title = $args->title;
+        $obj->description = $args->description ?? '';
+        $obj->mission_type = $args->mission_type;
+        $obj->conditions = $args->conditions;
+        $obj->reward_tickets = (int)($args->reward_tickets ?? 1);
+        $obj->reset_cycle = $args->reset_cycle ?? 'daily';
+        $obj->is_active = $args->is_active; // Guarantee N or Y from step 0
+        $obj->start_date = $args->start_date ?? null;
+        $obj->end_date = $args->end_date ?? null;
+
+        // 4. Insert or Update
+        if ($obj->mission_srl) {
+            $output = executeQuery('a_mission.updateMission', $obj);
         } else {
-            $args->mission_srl = getNextSequence();
-            $output = executeQuery('a_mission.insertMission', $args);
+            $obj->mission_srl = getNextSequence();
+            $output = executeQuery('a_mission.insertMission', $obj);
         }
 
         if (!$output->toBool())
