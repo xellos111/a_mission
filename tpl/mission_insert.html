@@ -21,38 +21,15 @@
             <div id="condition_container">
                 <!-- Existing Conditions -->
                 <div loop="$mission_info->conditions => $key, $val" class="am_condition_row">
-                    {@
-                    $real_type = $key;
-                    $real_count = $val;
-                    $real_target = '';
-
-                    $v_type = is_array($val) ? ($val['type']??'') : (is_object($val) ? ($val->type??'') : '');
-                    $v_count = is_array($val) ? ($val['count']??'') : (is_object($val) ? ($val->count??'') : '');
-                    $v_target = is_array($val) ? ($val['target_mid']??'') : (is_object($val) ? ($val->target_mid??'') :
-                    '');
-
-                    if($v_type) $real_type = $v_type;
-                    if($v_count) $real_count = $v_count;
-                    if($v_target) $real_target = is_array($v_target) ? implode(',', $v_target) : $v_target;
-
-                    if(strpos($real_type, '_') !== false) {
-                    $parts = explode('_', $real_type);
-                    $last = end($parts);
-                    if(is_numeric($last)) {
-                    array_pop($parts);
-                    $real_type = implode('_', $parts);
-                    }
-                    }
-                    }
                     <select name="condition_type[]">
-                        <option value="login" selected|cond="$real_type=='login'">로그인</option>
-                        <option value="write_doc" selected|cond="$real_type=='write_doc'">글 작성</option>
-                        <option value="write_comment" selected|cond="$real_type=='write_comment'">댓글 작성</option>
-                        <option value="vote_up" selected|cond="$real_type=='vote_up'">추천(좋아요)</option>
+                        <option value="login" selected|cond="$val->type=='login'">로그인</option>
+                        <option value="write_doc" selected|cond="$val->type=='write_doc'">글 작성</option>
+                        <option value="write_comment" selected|cond="$val->type=='write_comment'">댓글 작성</option>
+                        <option value="vote_up" selected|cond="$val->type=='vote_up'">추천(좋아요)</option>
                     </select>
-                    <input type="number" name="condition_count[]" value="{$real_count}" placeholder="횟수"
+                    <input type="number" name="condition_count[]" value="{$val->count}" placeholder="횟수"
                         style="width:60px" /> 회
-                    <input type="text" name="condition_target[]" value="{$real_target}" placeholder="게시판ID (선택)"
+                    <input type="text" name="condition_target[]" value="{$val->target_mid}" placeholder="게시판ID (선택)"
                         style="width:100px" title="mid를 콤마(,)로 구분" />
                     <button type="button" class="x_btn x_btn-danger x_btn-mini"
                         onclick="removeCondition(this)">삭제</button>
