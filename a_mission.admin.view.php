@@ -299,4 +299,43 @@ class a_missionAdminView extends a_mission
         
         $this->setTemplateFile('statistics');
     }
+
+    /**
+     * @brief View Specific Member's Mission Progress (Admin)
+     */
+    function dispAMissionAdminMemberMissions() 
+    {
+        $target_member_srl = Context::get('target_member_srl');
+        if(!$target_member_srl) return new BaseObject(-1, 'msg_invalid_request');
+        
+        // 1. Get Member Info
+        $oMemberModel = getModel('member');
+        $member_info = $oMemberModel->getMemberInfoByMemberSrl($target_member_srl);
+        if(!$member_info) return new BaseObject(-1, 'msg_not_permitted');
+        
+        // 2. Get All Active Missions
+        $oModel = getModel('a_mission');
+        $args = new stdClass();
+        $args->is_active = 'Y';
+        $output = executeQueryArray('a_mission.getAllActiveMissions', $args);
+        $mission_list = $output->data;
+        if (!$mission_list) $mission_list = [];
+        
+        // 3. Get Progress
+        foreach ($mission_list as $key => $mission) {
+            $progress = $oModel->getMissionProgress($mission->mission_srl, $target_member_srl);
+            if ($progress) {
+                $mission->progress = $progress;
+            } else {
+                $mission->progress = null;
+            }
+            $mission_list[$key] = $mission;
+        }
+        
+        Context::set('target_member_info', $member_info);
+        Context::set('mission_list', $mission_list);
+        
+        $this->setLayoutFile('popup_layout');
+        $this->setTemplateFile('admin_member_missions');
+    }
 }

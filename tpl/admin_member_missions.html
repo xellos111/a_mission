@@ -1,0 +1,46 @@
+<h1>{$target_member_info->nick_name}님의 미션 진행 현황</h1>
+
+<table class="x_table x_table-striped x_table-hover">
+    <thead>
+        <tr>
+            <th>미션 제목</th>
+            <th>상태</th>
+            <th>보상</th>
+            <th>달성일 / 최근 업데이트</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr loop="$mission_list => $val">
+            <td>
+                <strong>{$val->title}</strong>
+                <p style="font-size:11px; color:#888; margin:0">{$val->description}</p>
+            </td>
+            <td>
+                <!--@if($val->progress && $val->progress->is_completed == 'Y')-->
+                <span class="x_label x_label-success">완료됨</span>
+                <!--@elseif($val->progress)-->
+                <span class="x_label x_label-warning">진행 중</span>
+                <!--@else-->
+                <span class="x_label">미참여</span>
+                <!--@end-->
+            </td>
+            <td>
+                <span style="color:#2563eb">+{$val->reward_tickets}장</span>
+            </td>
+            <td>
+                <!--@if($val->progress)-->
+                {zdate($val->progress->regdate, "Y-m-d H:i:s")}
+                <!--@else-->
+                -
+                <!--@end-->
+            </td>
+        </tr>
+        <tr cond="!$mission_list">
+            <td colspan="4" style="text-align:center; padding: 20px;">등록된 미션이 없습니다.</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="x_clearfix" style="margin-top:20px; text-align:center">
+    <button type="button" class="x_btn" onclick="window.close();">닫기</button>
+</div>
