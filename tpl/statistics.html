@@ -50,3 +50,51 @@
         </tr>
     </tbody>
 </table>
+
+<hr style="margin: 40px 0; border:0; border-top:1px dashed #ddd;">
+
+<h3>티켓(게임)-캡슐 분석</h3>
+
+<!-- Game Efficiency Card -->
+<div
+    style="background:#f9f9f9; padding:20px; border-radius:8px; border:1px solid #eee; margin-bottom:20px; display:flex; align-items:center;">
+    <div style="flex:1">
+        <h4 style="margin:0; color:#555">티켓 1장당 평균 가치 (효율)</h4>
+        <p style="font-size:2.5em; font-weight:bold; color:#2563eb; margin:5px 0 0 0">
+            {@ $avg_value = ($game_stats->total_spent_tickets > 0) ? round($game_stats->total_won_points /
+            $game_stats->total_spent_tickets) : 0}
+            {$avg_value} <span style="font-size:0.4em; color:#999">Points</span>
+        </p>
+    </div>
+    <div style="flex:2; text-align:right; color:#777">
+        총 <b>{number_format($game_stats->total_games)}</b>게임 진행 /
+        티켓 <b>{number_format($game_stats->total_spent_tickets)}</b>장 소모 /
+        총 <b>{number_format($game_stats->total_won_points)}</b> 포인트 지급
+    </div>
+</div>
+
+<!-- Winners Ranking -->
+<h4>게임 참여자 랭킹 (Top Winners)</h4>
+<table class="x_table x_table-striped x_table-hover">
+    <thead>
+        <tr>
+            <th>순위</th>
+            <th>닉네임 (아이디)</th>
+            <th>게임 횟수</th>
+            <th>총 획득 포인트</th>
+            <th>평균 획득 (장당)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr loop="$game_ranking => $key, $val">
+            <td>{$key + 1}</td>
+            <td>{$val->nick_name} <span style="font-size:0.8em; color:#999">({$val->user_id})</span></td>
+            <td>{number_format($val->play_count)}회</td>
+            <td style="font-weight:bold; color:#2563eb;">{number_format($val->total_won)} P</td>
+            <td>{number_format(round($val->total_won / $val->play_count))} P</td>
+        </tr>
+        <tr cond="!$game_ranking">
+            <td colspan="5" style="text-align:center; padding: 20px;">아직 게임 기록이 없습니다.</td>
+        </tr>
+    </tbody>
+</table>

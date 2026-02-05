@@ -1,0 +1,10 @@
+<query id="getGameStats" action="select">
+    <tables>
+        <table name="a_mission_game_log" />
+    </tables>
+    <columns>
+        <column name="count(*)" alias="total_games" />
+        <column name="sum(spent_tickets)" alias="total_spent_tickets" />
+        <column name="sum(won_points)" alias="total_won_points" />
+    </columns>
+</query>

@@ -280,9 +280,22 @@ class a_missionAdminView extends a_mission
             $mission_stats = is_array($out_mission->data) ? $out_mission->data : array($out_mission->data);
         }
         
+        // 3. Game Economy Stats (Ticket-Capsule Analysis)
+        $out_game_stats = executeQuery('a_mission.getGameStats', new stdClass());
+        $game_stats = $out_game_stats->data;
+        
+        // 4. Game Log Ranking (Who won the most?)
+        $out_ranking = executeQueryArray('a_mission.getGameRanking', new stdClass());
+        $game_ranking = [];
+        if($out_ranking->data) {
+             $game_ranking = is_array($out_ranking->data) ? $out_ranking->data : array($out_ranking->data);
+        }
+        
         Context::set('total_issued', $total_issued);
         Context::set('total_consumed', $total_consumed);
         Context::set('mission_stats', $mission_stats);
+        Context::set('game_stats', $game_stats);
+        Context::set('game_ranking', $game_ranking);
         
         $this->setTemplateFile('statistics');
     }

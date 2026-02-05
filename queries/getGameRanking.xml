@@ -1,0 +1,24 @@
+<query id="getGameRanking" action="select">
+    <tables>
+        <table name="a_mission_game_log" alias="log" />
+        <table name="member" alias="member" type="left join">
+            <conditions>
+                <condition operation="equal" column="member.member_srl" default="log.member_srl" />
+            </conditions>
+        </table>
+    </tables>
+    <columns>
+        <column name="member.user_id" />
+        <column name="member.nick_name" />
+        <column name="count(*)" alias="play_count" />
+        <column name="sum(log.won_points)" alias="total_won" />
+        <column name="sum(log.spent_tickets)" alias="total_spent" />
+    </columns>
+    <groups>
+        <group column="log.member_srl" />
+    </groups>
+    <navigation>
+        <index var="sort_index" default="total_won" order="desc" />
+        <list_count var="list_count" default="10" />
+    </navigation>
+</query>

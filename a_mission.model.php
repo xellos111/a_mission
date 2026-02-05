@@ -69,5 +69,23 @@ class a_missionModel extends a_mission
         if ($output->toBool() && $output->data)
             return $output->data;
         return null;
+        if ($output->toBool() && $output->data)
+            return $output->data;
+        return null;
+    }
+
+    /**
+     * @brief Get Member Ticket Count
+     */
+    function getTicketCount($member_srl)
+    {
+        $args = new stdClass();
+        $args->member_srl = $member_srl;
+        $output = executeQuery('a_mission.getTicketCount', $args);
+        
+        if($output->data) {
+             return (int)$output->data->ticket_count;
+        }
+        return 0;
     }
 }
