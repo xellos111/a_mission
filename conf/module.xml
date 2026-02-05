@@ -14,5 +14,6 @@
         <action name="dispAMissionAdminStats" type="view" standalone="true" />
         <action name="dispAMissionAdminLogList" type="view" standalone="true" />
         <action name="procAMissionAdminUpdateTicket" type="controller" standalone="true" />
+        <action name="dispAMissionAdminMemberMissions" type="view" standalone="true" />
     </actions>
 </module>
