@@ -20,6 +20,9 @@ class a_missionAdminController extends a_mission
     {
         $args = Context::getRequestVars();
 
+        // 0. Explicitly handle is_active (default to Y if missing, but radio should send it)
+        $args->is_active = (isset($args->is_active) && $args->is_active == 'N') ? 'N' : 'Y';
+
         // 1. Format Conditions to JSON
         // Expected input: condition_type[], condition_count[] arrays from form
         $conditions = [];
