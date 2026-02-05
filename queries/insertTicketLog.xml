@@ -1,0 +1,14 @@
+<query id="insertTicketLog" action="insert">
+    <tables>
+        <table name="a_mission_ticket_log" />
+    </tables>
+    <columns>
+        <column name="log_srl" var="log_srl" />
+        <column name="member_srl" var="member_srl" />
+        <column name="amount" var="amount" />
+        <column name="balance_after" var="balance_after" />
+        <column name="description" var="description" />
+        <column name="regdate" var="regdate" />
+        <column name="ipaddress" var="ipaddress" />
+    </columns>
+</query>

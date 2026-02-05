@@ -1,0 +1,121 @@
+<include target="header.html" />
+
+<!-- Search Form & Buttons -->
+<form action="./" method="get" class="search center x_input-append" style="margin-bottom:20px">
+    <input type="hidden" name="module" value="{$module}" />
+    <input type="hidden" name="act" value="{$act}" />
+
+    <!-- View Switcher -->
+    <div class="x_btn-group" style="margin-right:20px; vertical-align:top; display:inline-block">
+        <a href="{getUrl('view_type','','page','')}" class="x_btn <!--@if(!$view_type)-->x_active<!--@end-->">전체 회원</a>
+        <a href="{getUrl('view_type','ranking','page','')}"
+            class="x_btn <!--@if($view_type=='ranking')-->x_active<!--@end-->">🏆 보유량 TOP 100</a>
+    </div>
+
+    <select name="search_target" style="display:none">
+        <option value="user_id" selected="selected">ID</option>
+    </select>
+    <input type="text" name="s_user_id" value="{Context::get('s_user_id')}" placeholder="User ID" />
+    <input type="text" name="s_nick_name" value="{Context::get('s_nick_name')}" placeholder="Nickname" />
+    <button type="submit" class="x_btn x_btn-inverse">검색</button>
+</form>
+
+<!-- Member List Table -->
+<table class="x_table x_table-striped x_table-hover">
+    <thead>
+        <tr>
+            <th>회원 번호</th>
+            <th>아이디</th>
+            <th>닉네임</th>
+            <th>이메일</th>
+            <th>보유 티켓</th>
+            <th>최근 활동</th>
+            <th>관리</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr loop="$ticket_list => $no, $val">
+            <td>{$val->member_srl}</td>
+            <td>{$val->user_id}</td>
+            <td><a href="#popup_menu_area" class="member_{$val->member_srl}"
+                    onclick="return false">{$val->nick_name}</a></td>
+            <td>{$val->email_address}</td>
+            <td style="font-weight:bold; color:#e6a23c; font-size:1.2em">{intval($val->ticket_count)}</td>
+            <td>{zdate($val->last_update, "Y-m-d H:i")}</td>
+            <td>
+                <button type="button" class="x_btn x_btn-mini"
+                    onclick="openTicketModal('{$val->member_srl}', '{$val->nick_name}', '{intval($val->ticket_count)}')">티켓
+                    관리</button>
+            </td>
+        </tr>
+        <tr cond="!$ticket_list">
+            <td colspan="7" style="text-align:center; padding: 20px;">검색된 회원이 없습니다.</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Pagination -->
+<div class="x_pagination" cond="$page_navigation">
+    <a href="{getUrl('page','','module_srl','')}" class="prevEnd">First</a>
+    <a href="{getUrl('page',$page_navigation->first_page,'module_srl','')}" class="prev"
+        cond="$page_navigation->first_page+1 < $page">Prev</a>
+    <span loop="$page = $page_navigation->getNextPage()">
+        <strong cond="$page==$page_navigation->cur_page">{$page}</strong>
+        <a href="{getUrl('page',$page,'module_srl','')}" cond="$page!=$page_navigation->cur_page">{$page}</a>
+    </span>
+    <a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="next"
+        cond="$page_navigation->last_page > $page">Next</a>
+    <a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="nextEnd">Last</a>
+</div>
+
+<!-- Ticket Management Modal -->
+<div id="ticketModal"
+    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; padding:20px; border-radius:8px; width:300px; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+        <h3 style="margin-top:0">티켓 관리</h3>
+        <p>대상: <span id="modal_nick_name" style="font-weight:bold"></span></p>
+        <p>현재: <span id="modal_current" style="color:#e6a23c"></span> 장</p>
+
+        <form action="./" method="post" id="ticketForm">
+            <input type="hidden" name="module" value="a_mission" />
+            <input type="hidden" name="act" value="procAMissionAdminUpdateTicket" />
+            <input type="hidden" name="target_member_srl" id="modal_member_srl" value="" />
+            <input type="hidden" name="success_return_url" value="{getUrl('act','dispAMissionAdminMemberList')}" />
+
+            <div style="margin:15px 0;">
+                <label><input type="radio" name="update_mode" value="add" checked /> 지급 (+)</label>
+                <label><input type="radio" name="update_mode" value="minus" /> 회수 (-)</label>
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <input type="number" name="amount" placeholder="수량 입력"
+                    style="width:100%; box-sizing:border-box; padding:8px;" required min="1" />
+            </div>
+
+            <div style="text-align:right;">
+                <button type="button" class="x_btn" onclick="closeTicketModal()">취소</button>
+                <button type="submit" class="x_btn x_btn-primary">확인</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openTicketModal(member_srl, nick_name, current) {
+        jQuery('#modal_member_srl').val(member_srl);
+        jQuery('#modal_nick_name').text(nick_name);
+        jQuery('#modal_current').text(current);
+        jQuery('#ticketModal').css('display', 'flex'); // Flex to center
+    }
+
+    function closeTicketModal() {
+        jQuery('#ticketModal').hide();
+    }
+
+    // Close on click outside
+    jQuery(window).click(function (e) {
+        if (e.target.id == 'ticketModal') {
+            closeTicketModal();
+        }
+    });
+</script>

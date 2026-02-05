@@ -1,0 +1,24 @@
+<query id="getTopTicketList" action="select">
+    <tables>
+        <table name="a_mission_tickets" alias="tickets" />
+        <table name="member" alias="member" type="left join">
+            <conditions>
+                <condition operation="equal" column="member_srl" default="tickets.member_srl" />
+            </conditions>
+        </table>
+    </tables>
+    <columns>
+        <column name="member.*" />
+        <column name="tickets.ticket_count" />
+        <column name="tickets.last_update" />
+    </columns>
+    <conditions>
+        <condition operation="more" column="tickets.ticket_count" var="ticket_min" default="0" />
+    </conditions>
+    <navigation>
+        <index var="sort_index" default="tickets.ticket_count" order="desc" />
+        <list_count var="list_count" default="100" />
+        <page_count var="page_count" default="1" />
+        <page var="page" default="1" />
+    </navigation>
+</query>

@@ -1,0 +1,53 @@
+<include target="header.html" />
+
+<h3>티켓/포인트 변동 내역</h3>
+
+<table class="x_table x_table-striped x_table-hover">
+    <thead>
+        <tr>
+            <th>번호</th>
+            <th>일시</th>
+            <th>회원</th>
+            <th>변동량</th>
+            <th>잔액</th>
+            <th>내용</th>
+            <th>IP</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr loop="$log_list => $no, $val">
+            <td>{$val->log_srl}</td>
+            <td>{zdate($val->regdate, "Y-m-d H:i:s")}</td>
+            <td>
+                <!--@if($val->nick_name)-->
+                {$val->nick_name} ({$val->user_id})
+                <!--@else-->
+                <span style="color:#999">탈퇴 회원 ({$val->member_srl})</span>
+                <!--@end-->
+            </td>
+            <td style="font-weight:bold; color:{$val->amount > 0 ? '#DC143C' : '#4169E1'}">
+                {$val->amount > 0 ? '+' : ''}{$val->amount}
+            </td>
+            <td>{number_format($val->balance_after)}</td>
+            <td>{$val->description}</td>
+            <td>{$val->ipaddress}</td>
+        </tr>
+        <tr cond="!$log_list">
+            <td colspan="7" style="text-align:center; padding: 20px;">기록이 없습니다.</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Pagination -->
+<div class="x_pagination" cond="$page_navigation">
+    <a href="{getUrl('page','','module_srl','')}" class="prevEnd">First</a>
+    <a href="{getUrl('page',$page_navigation->first_page,'module_srl','')}" class="prev"
+        cond="$page_navigation->first_page+1 < $page">Prev</a>
+    <span loop="$page = $page_navigation->getNextPage()">
+        <strong cond="$page==$page_navigation->cur_page">{$page}</strong>
+        <a href="{getUrl('page',$page,'module_srl','')}" cond="$page!=$page_navigation->cur_page">{$page}</a>
+    </span>
+    <a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="next"
+        cond="$page_navigation->last_page > $page">Next</a>
+    <a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="nextEnd">Last</a>
+</div>

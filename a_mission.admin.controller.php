@@ -86,4 +86,34 @@ class a_missionAdminController extends a_mission
         $this->setMessage('success_deleted');
         $this->setRedirectUrl(getUrl('act', 'dispAMissionAdminConfig', 'mission_srl', ''));
     }
+    /**
+     * @brief Manual Ticket Update
+     */
+    function procAMissionAdminUpdateTicket()
+    {
+        $member_srl = Context::get('target_member_srl');
+        $amount = (int)Context::get('amount');
+        $mode = Context::get('update_mode'); // 'add' or 'set' (Only add supported via addTicket for now, can expand)
+        
+        if(!$member_srl) return new BaseObject(-1, 'msg_invalid_request');
+        if($amount == 0) return new BaseObject(-1, 'msg_invalid_request');
+        
+        if($mode == 'minus') {
+            $amount = $amount * -1;
+        }
+        
+        // Use Main Controller to ensure consistency
+        $oController = getController('a_mission');
+        
+        // Check if member exists? (addTicket handles it)
+        $message = ($mode == 'add') ? 'Admin Grant' : 'Admin Revoke';
+        $oController->addTicket($member_srl, $amount, $message);
+        
+        $this->setMessage('success_updated');
+        
+        if(!in_array(Context::getRequestMethod(), ['XMLRPC', 'JSON'])) {
+            $returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getUrl('act', 'dispAMissionAdminMemberList');
+            $this->setRedirectUrl($returnUrl);
+        }
+    }
 }

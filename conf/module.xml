@@ -9,5 +9,9 @@
         <action name="procAMissionAdminInsertMission" type="controller" />
         <action name="procAMissionAdminDeleteMission" type="controller" />
         <action name="procAMissionPlayGame" type="controller" />
+        
+        <action name="dispAMissionAdminMemberList" type="view" standalone="true" />
+        <action name="dispAMissionAdminLogList" type="view" standalone="true" />
+        <action name="procAMissionAdminUpdateTicket" type="controller" standalone="true" />
     </actions>
 </module>

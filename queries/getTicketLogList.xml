@@ -1,0 +1,21 @@
+<query id="getTicketLogList" action="select">
+    <tables>
+        <table name="a_mission_ticket_log" alias="log" />
+        <table name="member" alias="member" type="left join">
+            <conditions>
+                <condition operation="equal" column="member.member_srl" default="log.member_srl" />
+            </conditions>
+        </table>
+    </tables>
+    <columns>
+        <column name="log.*" />
+        <column name="member.nick_name" />
+        <column name="member.user_id" />
+    </columns>
+    <navigation>
+        <index var="sort_index" default="log.log_srl" order="desc" />
+        <list_count var="list_count" default="20" />
+        <page_count var="page_count" default="10" />
+        <page var="page" default="1" />
+    </navigation>
+</query>

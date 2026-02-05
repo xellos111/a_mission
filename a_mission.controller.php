@@ -162,7 +162,7 @@ class a_missionController extends a_mission
             if ($all_cleared) {
                 $progress->is_completed = 'Y';
                 $progress->completed_date = $now;
-                $this->addTicket($member_srl, $mission->reward_tickets);
+                $this->addTicket($member_srl, $mission->reward_tickets, "Mission Reward: " . $mission->title);
             }
 
             // Save to DB
@@ -232,7 +232,7 @@ class a_missionController extends a_mission
             return new BaseObject(-1, 'msg_not_enough_tickets');
 
         // 2. Consume Tickets
-        $this->addTicket($member_srl, -$bet_amount);
+        $this->addTicket($member_srl, -$bet_amount, "Game Play: " . $game_type);
 
         // 3. Game Logic (Placeholder)
         // Here you would implement the actual game RNG and logic.
@@ -242,7 +242,7 @@ class a_missionController extends a_mission
 
         if ($is_win) {
             $win_amount = $bet_amount * 2;
-            $this->addTicket($member_srl, $win_amount);
+            $this->addTicket($member_srl, $win_amount, "Game Win: " . $game_type);
         }
 
         // 4. Log Result
@@ -265,7 +265,7 @@ class a_missionController extends a_mission
     /**
      * @brief Add Ticket to User (Positive or Negative)
      */
-    function addTicket($member_srl, $count)
+    function addTicket($member_srl, $count, $message = '')
     {
         if ($count == 0)
             return;
@@ -275,9 +275,12 @@ class a_missionController extends a_mission
         $args = new stdClass();
         $args->member_srl = $member_srl;
         $output = executeQuery('a_mission.getTicketBalance', $args);
+        
+        $current_tickets = 0;
 
         if ($output->data) {
-            $args->ticket_count = $output->data->ticket_count + $count;
+            $current_tickets = $output->data->ticket_count;
+            $args->ticket_count = $current_tickets + $count;
             if ($args->ticket_count < 0)
                 $args->ticket_count = 0; // Prevent negative balance
             executeQuery('a_mission.updateTicketBalance', $args);
@@ -288,7 +291,20 @@ class a_missionController extends a_mission
             $args->ticket_count = $count;
             executeQuery('a_mission.insertTicketWallet', $args);
         }
+        
+        // New Balance (for logging)
+        $balance_after = $args->ticket_count;
 
-        // Optional: Log ticket history
+        // Log ticket history
+        $log_args = new stdClass();
+        $log_args->log_srl = getNextSequence();
+        $log_args->member_srl = $member_srl;
+        $log_args->amount = $count;
+        $log_args->balance_after = $balance_after;
+        $log_args->description = $message ? $message : ($count > 0 ? 'Granted' : 'Consumed');
+        $log_args->regdate = date('YmdHis');
+        $log_args->ipaddress = $_SERVER['REMOTE_ADDR'];
+        
+        executeQuery('a_mission.insertTicketLog', $log_args);
     }
 }
