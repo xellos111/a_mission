@@ -29,6 +29,9 @@
                     </select>
                     <input type="number" name="condition_count[]" value="{$count}" placeholder="횟수"
                         style="width:60px" /> 회
+                    <input type="text" name="condition_target[]"
+                        value="{$mission_info->conditions[$type]['target_mid'] ? implode(',', $mission_info->conditions[$type]['target_mid']) : ''}"
+                        placeholder="게시판ID (선택)" style="width:100px" title="mid를 콤마(,)로 구분" />
                     <button type="button" class="x_btn x_btn-danger x_btn-mini"
                         onclick="removeCondition(this)">삭제</button>
                 </div>
@@ -84,6 +87,8 @@
             <option value="vote_up">추천(좋아요)</option>
         </select>
         <input type="number" name="condition_count[]" value="1" placeholder="횟수" style="width:60px" /> 회
+        <input type="text" name="condition_target[]" placeholder="게시판ID (선택)" style="width:100px"
+            title="mid를 콤마(,)로 구분" />
         <button type="button" class="x_btn x_btn-danger x_btn-mini" onclick="removeCondition(this)">삭제</button>
     </div>
 </div>

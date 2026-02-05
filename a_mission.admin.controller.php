@@ -28,8 +28,19 @@ class a_missionAdminController extends a_mission
                 if (!$type)
                     continue;
                 $count = $args->condition_count[$key] ?? 1;
-                $conditions[$type] = (int) $count;
-                // Add extra details if needed (e.g. module_srl)
+                $target_str = trim($args->condition_target[$key] ?? '');
+                
+                if ($target_str) {
+                    // Advanced Condition: {"count":1, "target_mid":["free"]}
+                    $targets = array_map('trim', explode(',', $target_str));
+                    $conditions[$type] = [
+                        'count' => (int)$count,
+                        'target_mid' => $targets
+                    ];
+                } else {
+                    // Simple Condition: 1
+                    $conditions[$type] = (int) $count;
+                }
             }
         }
         $args->conditions = json_encode($conditions);
