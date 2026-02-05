@@ -49,46 +49,8 @@ class a_missionAdminView extends a_mission
             $args->mission_srl = $mission_srl;
             $output = executeQuery('a_mission.getMission', $args);
             if ($output->data) {
-                // Decode JSON and Normalize for View
-                $raw_conditions = json_decode($output->data->conditions, true);
-                $normalized_conditions = [];
-                
-                if($raw_conditions && is_array($raw_conditions)) {
-                    foreach($raw_conditions as $key => $val) {
-                         $real_type = $key;
-                         $real_count = 1;
-                         $real_target = '';
-                         
-                         // Logic from template
-                         if(is_array($val)) {
-                             if(isset($val['type'])) $real_type = $val['type'];
-                             if(isset($val['count'])) $real_count = $val['count'];
-                             if(isset($val['target_mid'])) $real_target = is_array($val['target_mid']) ? implode(',', $val['target_mid']) : $val['target_mid'];
-                         } elseif(is_object($val)) {
-                             if(isset($val->type)) $real_type = $val->type;
-                             if(isset($val->count)) $real_count = $val->count;
-                             if(isset($val->target_mid)) $real_target = is_array($val->target_mid) ? implode(',', $val->target_mid) : $val->target_mid;
-                         } else {
-                             // Legacy Simple Int
-                             $real_count = (int)$val;
-                         }
-                         
-                         // Fallback: Strip suffix
-                         if(strpos($real_type, '_') !== false && preg_match('/_([0-9]+)$/', $real_type)) {
-                               $real_type = preg_replace('/_([0-9]+)$/', '', $real_type);
-                         }
-                         
-                         $obj = new stdClass();
-                         $obj->type = $real_type;
-                         $obj->count = $real_count;
-                         $obj->target_mid = $real_target;
-                         
-                         // Use original key to maintain loop structure if needed, or index
-                         $normalized_conditions[$key] = $obj;
-                    }
-                }
-                
-                $output->data->conditions = $normalized_conditions;
+                // Decode JSON for View
+                $output->data->conditions = json_decode($output->data->conditions, true);
                 Context::set('mission_info', $output->data);
             }
         }
