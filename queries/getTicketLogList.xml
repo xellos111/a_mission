@@ -12,6 +12,10 @@
         <column name="member.nick_name" />
         <column name="member.user_id" />
     </columns>
+    <conditions>
+        <condition operation="like" column="member.user_id" var="s_user_id" />
+        <condition operation="like" column="member.nick_name" var="s_nick_name" pipe="or" />
+    </conditions>
     <navigation>
         <index var="sort_index" default="log.log_srl" order="desc" />
         <list_count var="list_count" default="20" />

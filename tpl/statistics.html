@@ -1,0 +1,52 @@
+<include target="header.html" />
+
+<h3>모듈 통계 (Statistics)</h3>
+
+<!-- Dashboard Cards -->
+<div style="display:flex; gap:20px; margin-bottom:30px; flex-wrap:wrap">
+    <div style="flex:1; background:#fff; border:1px solid #ddd; padding:20px; border-radius:8px; min-width:200px">
+        <h4 style="margin:0; color:#666">총 티켓 발행량 (Issued)</h4>
+        <p style="font-size:2em; font-weight:bold; color:#DC143C; margin:10px 0 0 0">
+            +{number_format($total_issued)}
+        </p>
+    </div>
+    <div style="flex:1; background:#fff; border:1px solid #ddd; padding:20px; border-radius:8px; min-width:200px">
+        <h4 style="margin:0; color:#666">총 티켓 회수량 (Consumed)</h4>
+        <p style="font-size:2em; font-weight:bold; color:#4169E1; margin:10px 0 0 0">
+            -{number_format($total_consumed)}
+        </p>
+    </div>
+    <div style="flex:1; background:#fff; border:1px solid #ddd; padding:20px; border-radius:8px; min-width:200px">
+        <h4 style="margin:0; color:#666">총 유동량 (Net Flow)</h4>
+        <p style="font-size:2em; font-weight:bold; color:#333; margin:10px 0 0 0">
+            {number_format($total_issued - $total_consumed)}
+        </p>
+        <span style="font-size:0.9em; color:#999">현재 유저 보유 총합</span>
+    </div>
+</div>
+
+<h3>미션별 성과 (Mission Performance)</h3>
+<table class="x_table x_table-striped x_table-hover">
+    <thead>
+        <tr>
+            <th>미션 번호</th>
+            <th>미션 제목</th>
+            <th>보상 티켓</th>
+            <th>총 달성 횟수</th>
+            <th>총 지급된 보상</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr loop="$mission_stats => $val">
+            <td>{$val->mission_srl}</td>
+            <td style="font-weight:bold">{$val->title}</td>
+            <td>{$val->reward_tickets}</td>
+            <td>{number_format($val->completion_count)} 회</td>
+            <td style="color:#DC143C; font-weight:bold;">+{number_format($val->completion_count * $val->reward_tickets)}
+            </td>
+        </tr>
+        <tr cond="!$mission_stats">
+            <td colspan="5" style="text-align:center; padding: 20px;">데이터가 없습니다.</td>
+        </tr>
+    </tbody>
+</table>

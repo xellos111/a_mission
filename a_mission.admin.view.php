@@ -227,6 +227,13 @@ class a_missionAdminView extends a_mission
         $args = new stdClass();
         $args->page = Context::get('page');
         
+        // Search Logic
+        $search_target = Context::get('search_target');
+        $search_keyword = Context::get('search_keyword');
+        if($search_target && $search_keyword) {
+            $args->{$search_target} = $search_keyword;
+        }
+        
         $output = executeQueryArray('a_mission.getTicketLogList', $args);
         
         // Normalize
@@ -241,6 +248,42 @@ class a_missionAdminView extends a_mission
         Context::set('page_navigation', $output->page_navigation);
         Context::set('log_list', $log_list);
         
+        // Pass Search Params to View
+        Context::set('s_user_id', Context::get('s_user_id')); // Keep for query string
+        Context::set('s_nick_name', Context::get('s_nick_name'));
+        
         $this->setTemplateFile('log_list');
+    }
+    
+    /**
+     * @brief Statistics View
+     */
+    function dispAMissionAdminStats()
+    {
+        // 1. Ticket Economy Stats
+        // Total Issued
+        $args_plus = new stdClass();
+        $args_plus->amount_more = 0;
+        $out_plus = executeQuery('a_mission.getTicketStats', $args_plus);
+        $total_issued = $out_plus->data->total_amount ?? 0;
+        
+        // Total Consumed
+        $args_minus = new stdClass();
+        $args_minus->amount_less = 0;
+        $out_minus = executeQuery('a_mission.getTicketStats', $args_minus);
+        $total_consumed = abs($out_minus->data->total_amount ?? 0);
+        
+        // 2. Mission Completion Stats
+        $out_mission = executeQueryArray('a_mission.getMissionStats', new stdClass());
+        $mission_stats = [];
+        if($out_mission->data) {
+            $mission_stats = is_array($out_mission->data) ? $out_mission->data : array($out_mission->data);
+        }
+        
+        Context::set('total_issued', $total_issued);
+        Context::set('total_consumed', $total_consumed);
+        Context::set('mission_stats', $mission_stats);
+        
+        $this->setTemplateFile('statistics');
     }
 }

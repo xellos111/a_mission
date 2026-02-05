@@ -1,0 +1,20 @@
+<query id="getMissionStats" action="select">
+    <tables>
+        <table name="a_mission_missions" alias="mission" />
+        <table name="a_mission_progress" alias="progress" type="left join">
+            <conditions>
+                <condition operation="equal" column="mission.mission_srl" default="progress.mission_srl" />
+                <condition operation="equal" column="progress.is_completed" default="Y" pipe="and" />
+            </conditions>
+        </table>
+    </tables>
+    <columns>
+        <column name="mission.mission_srl" />
+        <column name="mission.title" />
+        <column name="mission.reward_tickets" />
+        <column name="count(progress.mission_srl)" alias="completion_count" />
+    </columns>
+    <groups>
+        <group column="mission.mission_srl" />
+    </groups>
+</query>

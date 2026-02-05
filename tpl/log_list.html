@@ -2,6 +2,18 @@
 
 <h3>티켓/포인트 변동 내역</h3>
 
+<!-- Search Form -->
+<form action="./" method="get" class="search center x_input-append" style="margin-bottom:20px">
+    <input type="hidden" name="module" value="{$module}" />
+    <input type="hidden" name="act" value="{$act}" />
+    <select name="search_target" style="margin-right:4px">
+        <option value="s_user_id" selected="selected" |cond="$s_user_id">아이디</option>
+        <option value="s_nick_name" selected="selected" |cond="$s_nick_name">닉네임</option>
+    </select>
+    <input type="text" name="search_keyword" value="{Context::get('search_keyword')}" />
+    <button type="submit" class="x_btn x_btn-inverse">검색</button>
+</form>
+
 <table class="x_table x_table-striped x_table-hover">
     <thead>
         <tr>

@@ -1,0 +1,12 @@
+<query id="getTicketStats" action="select">
+    <tables>
+        <table name="a_mission_ticket_log" />
+    </tables>
+    <columns>
+        <column name="sum(amount)" alias="total_amount" />
+    </columns>
+    <conditions>
+        <condition operation="excess" column="amount" var="amount_more" />
+        <condition operation="below" column="amount" var="amount_less" pipe="and" />
+    </conditions>
+</query>

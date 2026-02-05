@@ -98,6 +98,7 @@ class a_mission extends ModuleObject
             'procAMissionAdminDeleteMission' => 'controller',
             'procAMissionPlayGame' => 'controller',
             'dispAMissionAdminMemberList' => 'view',
+            'dispAMissionAdminStats' => 'view',
             'dispAMissionAdminLogList' => 'view', // Added as per instruction
             'procAMissionAdminUpdateTicket' => 'controller'
         ];

@@ -10,7 +10,8 @@ $oContext->init();
 
 $actions = [
     'procAMissionAdminUpdateTicket' => 'controller',
-    'dispAMissionAdminLogList' => 'view'
+    'dispAMissionAdminLogList' => 'view',
+    'dispAMissionAdminStats' => 'view'
 ];
 
 echo "<h3>Fixing Actions...</h3>";
