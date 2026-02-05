@@ -20,18 +20,23 @@
         <div class="x_controls">
             <div id="condition_container">
                 <!-- Existing Conditions -->
-                <div loop="$mission_info->conditions => $type, $count" class="am_condition_row">
+                <div loop="$mission_info->conditions => $key, $val" class="am_condition_row">
+                    {@
+                    $real_type = (is_array($val) && isset($val['type'])) ? $val['type'] : $key;
+                    $real_count = (is_array($val) && isset($val['count'])) ? $val['count'] : $val;
+                    $real_target = (is_array($val) && isset($val['target_mid']) && is_array($val['target_mid'])) ?
+                    implode(',', $val['target_mid']) : '';
+                    }
                     <select name="condition_type[]">
-                        <option value="login" selected|cond="$type=='login'">로그인</option>
-                        <option value="write_doc" selected|cond="$type=='write_doc'">글 작성</option>
-                        <option value="write_comment" selected|cond="$type=='write_comment'">댓글 작성</option>
-                        <option value="vote_up" selected|cond="$type=='vote_up'">추천(좋아요)</option>
+                        <option value="login" selected|cond="$real_type=='login'">로그인</option>
+                        <option value="write_doc" selected|cond="$real_type=='write_doc'">글 작성</option>
+                        <option value="write_comment" selected|cond="$real_type=='write_comment'">댓글 작성</option>
+                        <option value="vote_up" selected|cond="$real_type=='vote_up'">추천(좋아요)</option>
                     </select>
-                    <input type="number" name="condition_count[]" value="{$count}" placeholder="횟수"
+                    <input type="number" name="condition_count[]" value="{$real_count}" placeholder="횟수"
                         style="width:60px" /> 회
-                    <input type="text" name="condition_target[]"
-                        value="{$mission_info->conditions[$type]['target_mid'] ? implode(',', $mission_info->conditions[$type]['target_mid']) : ''}"
-                        placeholder="게시판ID (선택)" style="width:100px" title="mid를 콤마(,)로 구분" />
+                    <input type="text" name="condition_target[]" value="{$real_target}" placeholder="게시판ID (선택)"
+                        style="width:100px" title="mid를 콤마(,)로 구분" />
                     <button type="button" class="x_btn x_btn-danger x_btn-mini"
                         onclick="removeCondition(this)">삭제</button>
                 </div>
