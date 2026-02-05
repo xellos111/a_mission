@@ -2,7 +2,7 @@
 <module version="0.2">
     <title xml:lang="ko">A-Mission</title>
     <description xml:lang="ko">커뮤니티 활동(로그인, 글쓰기 등)을 통해 티켓을 획득하고 게임에 참여하는 모듈입니다.</description>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <date>2026-02-05</date>
     <category>communication</category>
     <author email_address="dev@example.com" link="https://example.com">
