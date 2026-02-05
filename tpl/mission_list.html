@@ -31,8 +31,11 @@
                         <!--@else-->없음 (1회성)<!--@end-->
                     </td>
                     <td>
-                        <span class="x_label x_label-success" |cond="$mission->is_active=='Y'">ON</span>
-                        <span class="x_label x_label-danger" |cond="$mission->is_active!='Y'">OFF</span>
+                        <!--@if($mission->is_active == 'Y')-->
+                        <span class="x_label x_label-success">ON</span>
+                        <!--@else-->
+                        <span class="x_label x_label-danger">OFF</span>
+                        <!--@end-->
                     </td>
                     <td>{zdate($mission->regdate,"Y-m-d")}</td>
                     <td>

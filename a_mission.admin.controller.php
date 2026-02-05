@@ -67,7 +67,11 @@ class a_missionAdminController extends a_mission
         $obj->conditions = $args->conditions;
         $obj->reward_tickets = (int)($args->reward_tickets ?? 1);
         $obj->reset_cycle = $args->reset_cycle ?? 'daily';
-        $obj->is_active = $args->is_active; // Guarantee N or Y from step 0
+        
+        // Strict check for is_active
+        $raw_active = Context::get('is_active');
+        $obj->is_active = ($raw_active === 'N') ? 'N' : 'Y';
+        
         $obj->start_date = $args->start_date ?? null;
         $obj->end_date = $args->end_date ?? null;
 
