@@ -88,13 +88,10 @@ class a_missionController extends a_mission
             if (!$conditions)
                 continue;
 
-            // Check if this mission actually cares about the current trigger
-            if (!isset($conditions[$trigger_type]))
-                continue;
-
             // 2. Load Progress
             $progress = $oModel->getMissionProgress($mission->mission_srl, $member_srl);
             $is_new = false;
+            // ... (Progress Loading Logic is same) ...
             if (!$progress) {
                 $progress = new stdClass();
                 $progress->mission_srl = $mission->mission_srl;
@@ -120,50 +117,86 @@ class a_missionController extends a_mission
             if (!$current_data)
                 $current_data = [];
 
-            // 5. Update Specific Condition
-            $target_val = $conditions[$trigger_type];
-            // Handle simple integer target (Legacy/Simple mode)
-            if (is_numeric($target_val))
-                $target_req = $target_val;
-            else
-                $target_req = $target_val['count'] ?? 1;
+            // 5. Check ALL Conditions for Update & Completion
+            // We iterate all conditions because multiple conditions might match one trigger
+            
+            $updated = false;
+            
+            foreach($conditions as $c_key => $c_val) {
+                // Determine Type & Count & Target
+                $c_type = '';
+                $c_count = 1;
+                $c_target = null; // target_mid or module_srl
+                
+                if(is_array($c_val)) {
+                    // New Schema or Intermediate Schema
+                    $c_type = $c_val['type'] ?? $c_key; // Use internal type or key as fallback
+                    $c_count = $c_val['count'] ?? 1;
+                    $c_target = $c_val; // Pass whole array for checking
+                } else {
+                    // Legacy Schema (Simple Int)
+                    $c_type = $c_key;
+                    $c_count = (int)$c_val;
+                }
+                
+                // If this condition logic matches the current trigger
+                if($c_type == $trigger_type) {
+                     // Check Constraints (Board ID etc.)
+                     // Use helper logic embedded here or call function? 
+                     // Let's implement inline for clarity with new schema
+                     
+                     $match = true;
+                     
+                     // Check target_mid / module_srl
+                     if ($c_target) {
+                         // 5-1. Check module_srl
+                        if (isset($extra_condition['module_srl']) && isset($c_target['module_srl'])) {
+                            if (!in_array($extra_condition['module_srl'], $c_target['module_srl']))
+                                $match = false;
+                        }
 
-            // Check Extra Constraints (Board ID, etc.)
-            // 5-1. Check module_srl (Integer ID)
-            if (is_array($target_val) && isset($extra_condition['module_srl']) && isset($target_val['module_srl'])) {
-                if (!in_array($extra_condition['module_srl'], $target_val['module_srl']))
-                    continue;
-            }
-
-            // 5-2. Check target_mid (String ID, e.g., 'free')
-            if (is_array($target_val) && isset($extra_condition['module_srl']) && isset($target_val['target_mid'])) {
-                $oModuleModel = getModel('module');
-                $module_info = $oModuleModel->getModuleInfoByModuleSrl($extra_condition['module_srl']);
-                if ($module_info) {
-                    $current_mid = $module_info->mid;
-                    $target_mids = is_array($target_val['target_mid']) ? $target_val['target_mid'] : [$target_val['target_mid']];
-                    
-                    if (!in_array($current_mid, $target_mids)) {
-                        continue;
-                    }
+                        // 5-2. Check target_mid
+                        if ($match && isset($extra_condition['module_srl']) && isset($c_target['target_mid'])) {
+                            $oModuleModel = getModel('module');
+                            $module_info = $oModuleModel->getModuleInfoByModuleSrl($extra_condition['module_srl']);
+                            
+                            $current_mid = $module_info ? $module_info->mid : '';
+                            $target_mids = is_array($c_target['target_mid']) ? $c_target['target_mid'] : [$c_target['target_mid']];
+                            
+                            if (!$current_mid || !in_array($current_mid, $target_mids)) {
+                                $match = false;
+                            }
+                        }
+                     }
+                     
+                     if($match) {
+                         // Increment Progress for this SPECIFIC condition key
+                         if (!isset($current_data[$c_key])) $current_data[$c_key] = 0;
+                         
+                         if ($current_data[$c_key] < $c_count) {
+                            $current_data[$c_key]++;
+                            $updated = true;
+                         }
+                     }
                 }
             }
-
-            // Increment Count
-            if (!isset($current_data[$trigger_type]))
-                $current_data[$trigger_type] = 0;
-
-            // Limit to target (optional, but looks better in UI)
-            if ($current_data[$trigger_type] < $target_req) {
-                $current_data[$trigger_type]++;
-                $progress->last_updated = $now;
+            
+            if($updated) {
+                 $progress->last_updated = $now;
             }
 
             // 6. Check ALL Conditions for Completion
             $all_cleared = true;
-            foreach ($conditions as $c_type => $c_val) {
-                $req_count = is_numeric($c_val) ? $c_val : ($c_val['count'] ?? 1);
-                $cur_count = $current_data[$c_type] ?? 0;
+            foreach ($conditions as $c_key => $c_val) {
+                // Determine Count
+                $req_count = 1;
+                if(is_array($c_val)) {
+                    $req_count = $c_val['count'] ?? 1;
+                } else {
+                    $req_count = (int)$c_val;
+                }
+                
+                $cur_count = $current_data[$c_key] ?? 0;
 
                 if ($cur_count < $req_count) {
                     $all_cleared = false;

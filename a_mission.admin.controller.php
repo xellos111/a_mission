@@ -30,23 +30,30 @@ class a_missionAdminController extends a_mission
                 $count = $args->condition_count[$key] ?? 1;
                 $target_str = trim($args->condition_target[$key] ?? '');
                 
+                // Advanced Schema: always object with type
+                $cond_data = [
+                    'type' => $type,
+                    'count' => (int)$count
+                ];
+                
                 if ($target_str) {
-                    // Advanced Condition: {"count":1, "target_mid":["free"]}
-                    $targets = array_map('trim', explode(',', $target_str));
-                    $conditions[$type] = [
-                        'count' => (int)$count,
-                        'target_mid' => $targets
-                    ];
-                } else {
-                    // Simple Condition: 1
-                    $conditions[$type] = (int) $count;
+                    $cond_data['target_mid'] = array_map('trim', explode(',', $target_str));
                 }
+                
+                // Use unique key to allow multiple conditions of same type
+                $unique_key = $type . '_' . $key; 
+                $conditions[$unique_key] = $cond_data;
             }
         }
         $args->conditions = json_encode($conditions);
 
         // 2. Generate Mission Type String for Search (e.g., "login,write_doc")
-        $args->mission_type = implode(',', array_keys($conditions));
+        // Extract unique types from the conditions
+        $types = [];
+        foreach($conditions as $c) {
+            $types[] = is_array($c) && isset($c['type']) ? $c['type'] : 'unknown';
+        }
+        $args->mission_type = implode(',', array_unique($types));
 
         // 3. Insert or Update
         if ($args->mission_srl) {
