@@ -54,10 +54,6 @@ class a_missionController extends a_mission
      */
     function triggerDocumentVoted($obj)
     {
-        // DEBUG: Trace Trigger
-        $path = dirname(__FILE__) . '/debug_mission_vote.txt';
-        file_put_contents($path, date('Y-m-d H:i:s') . " Trigger Called (a_missionController)\n" . print_r($obj, true) . "\n", FILE_APPEND);
-
         // $obj typically contains: document_srl, member_srl (voter), point, before_point, after_point
         // We need to reward the AUTHOR of the document.
         
@@ -69,25 +65,15 @@ class a_missionController extends a_mission
         if(!$oDocument->isExists()) return new BaseObject();
         
         $author_srl = $oDocument->get('member_srl');
-        if(!$author_srl) {
-             file_put_contents($path, " - Failed to find author\n", FILE_APPEND);
-             return new BaseObject(); 
-        }
+        if(!$author_srl) return new BaseObject(); // Anonymous or invalid
         
         // Identify Voter correctly (Use Context if available to be sure)
         $logged_info = Context::get('logged_info');
         $voter_srl = $logged_info ? $logged_info->member_srl : $obj->member_srl;
         
-        file_put_contents($path, " - Check: Voter($voter_srl) vs Author($author_srl)\n", FILE_APPEND);
-
         // Prevent self-voting reward
-        if($voter_srl == $author_srl) {
-             file_put_contents($path, " - Self-vote detected (Block Reward)\n", FILE_APPEND);
-             return new BaseObject();
-        }
+        if($voter_srl == $author_srl) return new BaseObject();
         
-        file_put_contents($path, " - Rewarding Author: $author_srl\n", FILE_APPEND);
-
         $extra_vars = ['module_srl' => $oDocument->get('module_srl')];
         return $this->checkMission('get_voted_doc', $author_srl, $extra_vars);
     }
@@ -98,8 +84,24 @@ class a_missionController extends a_mission
      */
     function triggerCommentVoted($obj)
     {
-        // ... (Same for Comment) ...
-         return new BaseObject(); // Placeholder to save tokens
+        // $obj contains: comment_srl, member_srl (voter), point
+        if ($obj->point <= 0) return new BaseObject();
+
+        $oCommentModel = getModel('comment');
+        $oComment = $oCommentModel->getComment($obj->comment_srl);
+        if(!$oComment->isExists()) return new BaseObject();
+
+        $author_srl = $oComment->get('member_srl');
+        if(!$author_srl) return new BaseObject();
+
+        // Identify Voter correctly
+        $logged_info = Context::get('logged_info');
+        $voter_srl = $logged_info ? $logged_info->member_srl : $obj->member_srl;
+        
+        if($voter_srl == $author_srl) return new BaseObject();
+
+        $extra_vars = ['module_srl' => $oComment->get('module_srl')];
+        return $this->checkMission('get_voted_comment', $author_srl, $extra_vars);
     }
 
     /**
