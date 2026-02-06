@@ -48,17 +48,57 @@ class a_missionController extends a_mission
     /**
      * @brief Trigger: After Vote
      */
+    /**
+     * @brief Trigger: After Vote (Receive Recommendation)
+     * Target: document.updateVotedCount
+     */
     function triggerDocumentVoted($obj)
     {
-        // $obj contains: document_srl, member_srl (voter), point (1 or -1)
-        if (!$obj->member_srl)
-            return new BaseObject();
+        // $obj typically contains: document_srl, member_srl (voter), point, before_point, after_point
+        // We need to reward the AUTHOR of the document.
+        
+        if ($obj->point <= 0) return new BaseObject(); // Ignore downvotes or cancels
+        
+        // Get Document Author
+        $oDocumentModel = getModel('document');
+        $oDocument = $oDocumentModel->getDocument($obj->document_srl);
+        if(!$oDocument->isExists()) return new BaseObject();
+        
+        $author_srl = $oDocument->get('member_srl');
+        if(!$author_srl) return new BaseObject(); // Anonymous or invalid
+        
+        // Prevent self-voting reward (Though Rhymix blocks self-vote, double check to be safe)
+        // If voter is author, skip.
+        if($obj->member_srl == $author_srl) return new BaseObject();
+        
+        // Prepare Extra Variables (e.g. module_srl for Board Check)
+        $extra_vars = ['module_srl' => $oDocument->get('module_srl')];
+        
+        // Reward the AUTHOR
+        // We use a new trigger type 'get_voted_doc'
+        return $this->checkMission('get_voted_doc', $author_srl, $extra_vars);
+    }
 
-        // Only count up-votes (recommendations)
-        if ($obj->point > 0) {
-            return $this->checkMission('vote_up', $obj->member_srl);
-        }
-        return new BaseObject();
+    /**
+     * @brief Trigger: After Comment Vote (Receive Recommendation)
+     * Target: comment.updateVotedCount
+     */
+    function triggerCommentVoted($obj)
+    {
+        // $obj contains: comment_srl, member_srl (voter), point
+        if ($obj->point <= 0) return new BaseObject();
+
+        $oCommentModel = getModel('comment');
+        $oComment = $oCommentModel->getComment($obj->comment_srl);
+        if(!$oComment->isExists()) return new BaseObject();
+
+        $author_srl = $oComment->get('member_srl');
+        if(!$author_srl) return new BaseObject();
+
+        if($obj->member_srl == $author_srl) return new BaseObject();
+
+        $extra_vars = ['module_srl' => $oComment->get('module_srl')];
+        return $this->checkMission('get_voted_comment', $author_srl, $extra_vars);
     }
 
     /**

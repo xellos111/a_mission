@@ -25,7 +25,10 @@
                         <option value="login" selected|cond="$val->type=='login'">로그인</option>
                         <option value="write_doc" selected|cond="$val->type=='write_doc'">글 작성</option>
                         <option value="write_comment" selected|cond="$val->type=='write_comment'">댓글 작성</option>
-                        <option value="vote_up" selected|cond="$val->type=='vote_up'">추천(좋아요)</option>
+                        <option value="vote_up" selected|cond="$val->type=='vote_up'">추천(좋아요) 하기</option>
+                        <option value="get_voted_doc" selected|cond="$val->type=='get_voted_doc'">게시글 추천 받기</option>
+                        <option value="get_voted_comment" selected|cond="$val->type=='get_voted_comment'">댓글 추천 받기
+                        </option>
                     </select>
                     <input type="number" name="condition_count[]" value="{$val->count}" placeholder="횟수"
                         style="width:60px" /> 회
@@ -83,7 +86,9 @@
             <option value="login">로그인</option>
             <option value="write_doc">글 작성</option>
             <option value="write_comment">댓글 작성</option>
-            <option value="vote_up">추천(좋아요)</option>
+            <option value="vote_up">추천(좋아요) 하기</option>
+            <option value="get_voted_doc">게시글 추천 받기</option>
+            <option value="get_voted_comment">댓글 추천 받기</option>
         </select>
         <input type="number" name="condition_count[]" value="1" placeholder="횟수" style="width:60px" /> 회
         <input type="text" name="condition_target[]" placeholder="게시판ID (선택)" style="width:100px"

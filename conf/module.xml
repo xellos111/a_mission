@@ -16,4 +16,8 @@
         <action name="procAMissionAdminUpdateTicket" type="controller" standalone="true" />
         <action name="dispAMissionAdminMemberMissions" type="view" standalone="true" />
     </actions>
+    <triggers>
+        <trigger name="document.updateVotedCount" module="a_mission" type="controller" target="triggerDocumentVoted" after="after" />
+        <trigger name="comment.updateVotedCount" module="a_mission" type="controller" target="triggerCommentVoted" after="after" />
+    </triggers>
 </module>
