@@ -2,10 +2,10 @@
 
 <form action="./" method="post" class="x_form-horizontal">
     <input type="hidden" name="module" value="a_mission" />
-    <input type="hidden" name="act" value="procAMissionAdminInsertMission" />
+    <input type="hidden" name="act" value="procA_missionAdminInsertMission" />
     <input type="hidden" name="mission_srl" value="{$mission_info->mission_srl}" />
     <input type="hidden" name="success_return_url"
-        value="{getUrl('act', 'dispAMissionAdminConfig', 'mission_srl', '')}" />
+        value="{getUrl('act', 'dispA_missionAdminConfig', 'mission_srl', '')}" />
 
     <div class="x_control-group">
         <label class="x_control-label">미션 제목</label>
@@ -75,7 +75,7 @@
 
     <div class="x_clearfix btnArea">
         <button type="submit" class="x_btn x_btn-primary">저장</button>
-        <a href="{getUrl('act','dispAMissionAdminConfig')}" class="x_btn">취소</a>
+        <a href="{getUrl('act','dispA_missionAdminConfig')}" class="x_btn">취소</a>
     </div>
 </form>
 

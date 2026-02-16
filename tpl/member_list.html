@@ -47,7 +47,7 @@
                     onclick="openTicketModal('{$val->member_srl}', '{$val->nick_name}', '{intval($val->ticket_count)}')">티켓
                     관리</button>
                 <button type="button" class="x_btn x_btn-mini"
-                    onclick="popopen('{getUrl('','module','a_mission','act','dispAMissionAdminMemberMissions','target_member_srl',$val->member_srl)}', 'MissionStatus'); return false;">미션
+                    onclick="popopen('{getUrl('','module','a_mission','act','dispA_missionAdminMemberMissions','target_member_srl',$val->member_srl)}', 'MissionStatus'); return false;">미션
                     현황</button>
             </td>
         </tr>
@@ -81,9 +81,9 @@
 
         <form action="./" method="post" id="ticketForm">
             <input type="hidden" name="module" value="a_mission" />
-            <input type="hidden" name="act" value="procAMissionAdminUpdateTicket" />
+            <input type="hidden" name="act" value="procA_missionAdminUpdateTicket" />
             <input type="hidden" name="target_member_srl" id="modal_member_srl" value="" />
-            <input type="hidden" name="success_return_url" value="{getUrl('act','dispAMissionAdminMemberList')}" />
+            <input type="hidden" name="success_return_url" value="{getUrl('act','dispA_missionAdminMemberList')}" />
 
             <div style="margin:15px 0;">
                 <label><input type="radio" name="update_mode" value="add" checked /> 지급 (+)</label>

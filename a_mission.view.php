@@ -17,7 +17,10 @@ class a_missionView extends a_mission
     /**
      * @brief User Dashboard (Mission List & Status)
      */
-    function dispAMissionDashboard()
+    /**
+     * @brief User Dashboard (Mission List & Status)
+     */
+    function dispA_missionDashboard()
     {
         // 1. Check Login
         if (!Context::get('is_logged'))
@@ -66,7 +69,7 @@ class a_missionView extends a_mission
     /**
      * @brief Game Screen
      */
-    function dispAMissionGame()
+    function dispA_missionGame()
     {
         // 1. Check Login
         if (!Context::get('is_logged'))

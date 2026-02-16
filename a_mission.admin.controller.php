@@ -16,7 +16,10 @@ class a_missionAdminController extends a_mission
     /**
      * @brief Insert/Update Mission
      */
-    function procAMissionAdminInsertMission()
+    /**
+     * @brief Insert/Update Mission
+     */
+    function procA_missionAdminInsertMission()
     {
         $args = Context::getRequestVars();
 
@@ -95,7 +98,7 @@ class a_missionAdminController extends a_mission
 
         $this->setMessage('success_saved');
         if (!in_array(Context::getRequestMethod(), ['XMLRPC', 'JSON'])) {
-            $returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getUrl('act', 'dispAMissionAdminConfig', 'mission_srl', '');
+            $returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getUrl('act', 'dispA_missionAdminConfig', 'mission_srl', '');
             $this->setRedirectUrl($returnUrl);
         }
     }
@@ -103,7 +106,7 @@ class a_missionAdminController extends a_mission
     /**
      * @brief Delete Mission
      */
-    function procAMissionAdminDeleteMission()
+    function procA_missionAdminDeleteMission()
     {
         $mission_srl = Context::get('mission_srl');
         if (!$mission_srl)
@@ -122,12 +125,12 @@ class a_missionAdminController extends a_mission
         }
 
         $this->setMessage('success_deleted');
-        $this->setRedirectUrl(getUrl('act', 'dispAMissionAdminConfig', 'mission_srl', ''));
+        $this->setRedirectUrl(getUrl('act', 'dispA_missionAdminConfig', 'mission_srl', ''));
     }
     /**
      * @brief Manual Ticket Update
      */
-    function procAMissionAdminUpdateTicket()
+    function procA_missionAdminUpdateTicket()
     {
         $member_srl = Context::get('target_member_srl');
         $amount = (int)Context::get('amount');
@@ -150,7 +153,7 @@ class a_missionAdminController extends a_mission
         $this->setMessage('success_updated');
         
         if(!in_array(Context::getRequestMethod(), ['XMLRPC', 'JSON'])) {
-            $returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getUrl('act', 'dispAMissionAdminMemberList');
+            $returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getUrl('act', 'dispA_missionAdminMemberList');
             $this->setRedirectUrl($returnUrl);
         }
     }

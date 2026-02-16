@@ -19,7 +19,7 @@
                 <tr loop="$mission_list => $no, $mission">
                     <td>{$mission->mission_srl}</td>
                     <td><a
-                            href="{getUrl('act','dispAMissionAdminInsert','mission_srl',$mission->mission_srl)}">{$mission->title}</a>
+                            href="{getUrl('act','dispA_missionAdminInsert','mission_srl',$mission->mission_srl)}">{$mission->title}</a>
                     </td>
                     <td>
                         <span class="x_label x_label-info">{$mission->mission_type}</span>
@@ -39,7 +39,7 @@
                     </td>
                     <td>{zdate($mission->regdate,"Y-m-d")}</td>
                     <td>
-                        <a href="{getUrl('act','dispAMissionAdminInsert','mission_srl',$mission->mission_srl)}"
+                        <a href="{getUrl('act','dispA_missionAdminInsert','mission_srl',$mission->mission_srl)}"
                             class="x_btn x_btn-mini">수정</a>
                         <button type="button" class="x_btn x_btn-inverse x_btn-mini"
                             onclick="deleteMission({$mission->mission_srl})">삭제</button>
@@ -53,7 +53,7 @@
 
         <div class="x_clearfix">
             <div class="x_pull-right">
-                <a href="{getUrl('act','dispAMissionAdminInsert','mission_srl','')}" class="x_btn x_btn-primary">미션
+                <a href="{getUrl('act','dispA_missionAdminInsert','mission_srl','')}" class="x_btn x_btn-primary">미션
                     등록</a>
             </div>
         </div>
@@ -74,6 +74,6 @@
     function deleteMission(mission_srl) {
         if (!confirm('정말 삭제하시겠습니까?')) return;
         var params = { mission_srl: mission_srl };
-        exec_xml('a_mission', 'procAMissionAdminDeleteMission', params, function () { location.reload(); });
+        exec_xml('a_mission', 'procA_missionAdminDeleteMission', params, function () { location.reload(); });
     }
 </script>

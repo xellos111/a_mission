@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
     <actions>
-        <action name="dispAMissionAdminConfig" type="view" index="true" admin_index="true" standalone="true" />
-        <action name="dispAMissionAdminInsert" type="view" />
-        <action name="dispAMissionDashboard" type="view" index="true" />
-        <action name="dispAMissionGame" type="view" />
-        
-        <action name="procAMissionAdminInsertMission" type="controller" />
-        <action name="procAMissionAdminDeleteMission" type="controller" />
-        <action name="procAMissionPlayGame" type="controller" />
-        
-        <action name="dispAMissionAdminMemberList" type="view" standalone="true" />
-        <action name="dispAMissionAdminStats" type="view" standalone="true" />
-        <action name="dispAMissionAdminLogList" type="view" standalone="true" />
-        <action name="procAMissionAdminUpdateTicket" type="controller" standalone="true" />
-        <action name="dispAMissionAdminMemberMissions" type="view" standalone="true" />
+        <action name="dispA_missionAdminConfig" type="view" index="true" admin_index="true" standalone="true" />
+        <action name="dispA_missionAdminInsert" type="view" />
+        <action name="dispA_missionDashboard" type="view" index="true" />
+        <action name="dispA_missionGame" type="view" />
+
+        <action name="procA_missionAdminInsertMission" type="controller" />
+        <action name="procA_missionAdminDeleteMission" type="controller" />
+        <action name="procA_missionPlayGame" type="controller" />
+
+        <action name="dispA_missionAdminMemberList" type="view" standalone="true" />
+        <action name="dispA_missionAdminStats" type="view" standalone="true" />
+        <action name="dispA_missionAdminLogList" type="view" standalone="true" />
+        <action name="procA_missionAdminUpdateTicket" type="controller" standalone="true" />
+        <action name="dispA_missionAdminMemberMissions" type="view" standalone="true" />
     </actions>
     <triggers>
         <trigger name="document.updateVotedCount" module="a_mission" type="controller" target="triggerDocumentVoted" after="after" />

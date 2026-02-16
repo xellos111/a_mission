@@ -34,7 +34,7 @@ class a_mission extends ModuleObject
         // 1. Check if the main Admin Action is registered
         // Use executeQuery instead of getModuleAction which might not exist in old versions
         $args = new stdClass();
-        $args->act = 'dispAMissionAdminConfig';
+        $args->act = 'dispA_missionAdminConfig';
         $output = executeQuery('module.getModuleAction', $args);
         if(!$output->data) return true;
 
@@ -90,17 +90,18 @@ class a_mission extends ModuleObject
     {
         // List of essential actions
         $actions = [
-            'dispAMissionAdminConfig' => 'view',
-            'dispAMissionAdminInsert' => 'view',
-            'dispAMissionDashboard' => 'view',
-            'dispAMissionGame' => 'view',
-            'procAMissionAdminInsertMission' => 'controller',
-            'procAMissionAdminDeleteMission' => 'controller',
-            'procAMissionPlayGame' => 'controller',
-            'dispAMissionAdminMemberList' => 'view',
-            'dispAMissionAdminStats' => 'view',
-            'dispAMissionAdminLogList' => 'view', // Added as per instruction
-            'procAMissionAdminUpdateTicket' => 'controller'
+            'dispA_missionAdminConfig' => 'view',
+            'dispA_missionAdminInsert' => 'view',
+            'dispA_missionDashboard' => 'view',
+            'dispA_missionGame' => 'view',
+            'procA_missionAdminInsertMission' => 'controller',
+            'procA_missionAdminDeleteMission' => 'controller',
+            'procA_missionPlayGame' => 'controller',
+            'dispA_missionAdminMemberList' => 'view',
+            'dispA_missionAdminStats' => 'view',
+            'dispA_missionAdminLogList' => 'view', 
+            'procA_missionAdminUpdateTicket' => 'controller',
+            'dispA_missionAdminMemberMissions' => 'view'
         ];
         
         // 1. Get DB Prefix securely
@@ -162,7 +163,7 @@ class a_mission extends ModuleObject
                         }
                     }
                     // If we found the table and processed it, stop looking for other tables
-                    break;
+                    // break; // Disabled: Force check ALL tables because rx_ might exist but xe_ is active
                 }
             }
         }

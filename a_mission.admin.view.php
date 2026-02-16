@@ -20,9 +20,8 @@ class a_missionAdminView extends a_mission
     /**
      * @brief Main Configuration Page (Mission List)
      */
-    function dispAMissionAdminConfig()
+    function dispA_missionAdminConfig()
     {
-        file_put_contents('debug_a_mission.txt', "Disp called\n", FILE_APPEND);
         // 1. Get Mission List
         $args = new stdClass();
         $args->page = Context::get('page');
@@ -41,7 +40,7 @@ class a_missionAdminView extends a_mission
     /**
      * @brief Insert/Edit Mission Page
      */
-    function dispAMissionAdminInsert()
+    function dispA_missionAdminInsert()
     {
         $mission_srl = Context::get('mission_srl');
         if ($mission_srl) {
@@ -75,7 +74,7 @@ class a_missionAdminView extends a_mission
                          
                          // Fallback: Strip suffix
                          if(strpos($real_type, '_') !== false && preg_match('/_([0-9]+)$/', $real_type)) {
-                               $real_type = preg_replace('/_([0-9]+)$/', '', $real_type);
+                                $real_type = preg_replace('/_([0-9]+)$/', '', $real_type);
                          }
                          
                          $obj = new stdClass();
@@ -98,7 +97,7 @@ class a_missionAdminView extends a_mission
     /**
      * @brief Member Management Page (Ticket List)
      */
-    function dispAMissionAdminMemberList()
+    function dispA_missionAdminMemberList()
     {
         $view_type = Context::get('view_type');
         
@@ -260,7 +259,7 @@ class a_missionAdminView extends a_mission
     /**
      * @brief Log List View
      */
-    function dispAMissionAdminLogList()
+    function dispA_missionAdminLogList()
     {
         $args = new stdClass();
         $args->page = Context::get('page');
@@ -296,7 +295,7 @@ class a_missionAdminView extends a_mission
     /**
      * @brief Statistics View
      */
-    function dispAMissionAdminStats()
+    function dispA_missionAdminStats()
     {
         // 1. Ticket Economy Stats
         // Total Issued
@@ -341,7 +340,7 @@ class a_missionAdminView extends a_mission
     /**
      * @brief View Specific Member's Mission Progress (Admin)
      */
-    function dispAMissionAdminMemberMissions() 
+    function dispA_missionAdminMemberMissions() 
     {
         $target_member_srl = Context::get('target_member_srl');
         if(!$target_member_srl) return new BaseObject(-1, 'msg_invalid_request');

@@ -303,6 +303,20 @@ class a_missionController extends a_mission
     /**
      * @brief Play Game (Consume Tickets)
      */
+    function procA_missionPlayGame()
+    {
+        $game_type = Context::get('game_type');
+        $bet_amount = (int)Context::get('bet_amount');
+        
+        if (!$game_type || $bet_amount <= 0)
+            return new BaseObject(-1, 'msg_invalid_request');
+            
+        return $this->playGame($game_type, $bet_amount);
+    }
+
+    /**
+     * @brief Internal Game Logic
+     */
     function playGame($game_type, $bet_amount)
     {
         if (!Context::get('is_logged'))
