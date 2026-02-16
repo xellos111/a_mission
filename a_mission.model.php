@@ -44,14 +44,18 @@ class a_missionModel extends a_mission
         }
 
         $matched_missions = [];
+        $debug_str = date('Y-m-d H:i:s') . " getActiveMissionsByTrigger($trigger_type)\n";
+        
         foreach ($all_missions as $mission) {
-            // Check if triggers are present in conditions JSON or string
-            // We check if the requested trigger_type is mentioned in the conditions string (simplified check)
-            // or if it matches specific keys if we decoded it (but strpos is faster for pre-check).
-            if (strpos($mission->conditions, $trigger_type) !== false) {
+            $has_str = (strpos($mission->conditions, $trigger_type) !== false) ? 'YES' : 'NO';
+            $debug_str .= " - M: {$mission->title} ({$mission->mission_srl}) / Cond: {$mission->conditions} / Match: $has_str\n";
+            
+            if ($has_str === 'YES') {
                 $matched_missions[] = $mission;
             }
         }
+        
+        file_put_contents(dirname(__FILE__) . '/debug_mission_filter.txt', $debug_str, FILE_APPEND);
 
         return $matched_missions;
     }

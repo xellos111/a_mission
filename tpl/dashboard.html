@@ -35,11 +35,12 @@
                     }
                     <div class="cond_info">
                         <span class="cond_name">
-                            <!--@if($type=='login')-->로그인
-                            <!--@elseif($type=='write_doc')-->글 쓰기
-                            <!--@elseif($type=='write_comment')-->댓글 쓰기
-                            <!--@elseif($type=='vote_up')-->추천 하기
-                            <!--@else-->{$type}<!--@end-->
+                            {@ $pure_type = preg_replace('/_[0-9]+$/', '', $type); }
+                            <!--@if($pure_type=='login')-->로그인
+                            <!--@elseif($pure_type=='write_doc')-->글 작성
+                            <!--@elseif($pure_type=='write_comment')-->댓글 작성
+                            <!--@elseif($pure_type=='vote_up')-->추천 하기
+                            <!--@else-->{$pure_type}<!--@end-->
                         </span>
                         <span class="cond_status">{$current_count} / {$target_count}</span>
                     </div>

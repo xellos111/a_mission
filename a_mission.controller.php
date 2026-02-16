@@ -110,6 +110,7 @@ class a_missionController extends a_mission
     function checkMission($trigger_type, $member_srl, $extra_condition = [])
     {
         $path = dirname(__FILE__) . '/debug_mission_vote.txt';
+        file_put_contents($path, "\n" . date('Y-m-d H:i:s') . " checkMission START ($trigger_type, $member_srl)\n", FILE_APPEND);
         $oModel = getModel('a_mission');
 
         // 1. Get Active Missions
@@ -270,11 +271,37 @@ class a_missionController extends a_mission
             if ($all_cleared) {
                 $progress->is_completed = 'Y';
                 $progress->completed_date = $now;
-                $this->addTicket($member_srl, $mission->reward_tickets, "Mission Reward: " . $mission->title);
+                
+                // Add Ticket with logging
+                $log_msg = "Mission Reward: " . $mission->title . " (Srl: " . $mission->mission_srl . ")";
+                file_put_contents($path, "      [SUCCESS] All Cleared! Awarding Tickets. Msg: $log_msg\n", FILE_APPEND);
+                
+                $this->addTicket($member_srl, $mission->reward_tickets, $log_msg);
             }
 
             // Save to DB
-            $this->_saveProgress($progress, $is_new);
+            // Save to DB
+            // Save to DB (Explicit Check & Save)
+            $p_args = new stdClass();
+            $p_args->mission_srl = $mission->mission_srl;
+            $p_args->member_srl = $member_srl;
+            $check = executeQuery('a_mission.getMissionProgress', $p_args);
+            
+            if($check->data) {
+                // Update
+                $progress->progress_srl = $check->data->progress_srl;
+                $output = executeQuery('a_mission.updateProgress', $progress);
+                file_put_contents($path, "      [SAVE] Updated Progress (ID: {$progress->progress_srl}, Completed: {$progress->is_completed})\n", FILE_APPEND);
+            } else {
+                // Insert
+                $progress->progress_srl = getNextSequence();
+                $output = executeQuery('a_mission.insertProgress', $progress);
+                file_put_contents($path, "      [SAVE] Inserted Progress (ID: {$progress->progress_srl}, Completed: {$progress->is_completed})\n", FILE_APPEND);
+            }
+            
+            if(!$output->toBool()) {
+                 file_put_contents($path, "      [ERROR] DB Save Failed\n", FILE_APPEND);
+            }
         }
 
         return new BaseObject();
