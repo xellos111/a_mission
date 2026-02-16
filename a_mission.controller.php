@@ -149,9 +149,26 @@ class a_missionController extends a_mission
             }
             
             // ... Skip if completed ...
+            // ... Skip if completed ...
             if ($progress->is_completed == 'Y') {
-                 file_put_contents($path, "      Skipping (Completed)\n", FILE_APPEND);
-                 continue;
+                 $do_reset = false;
+                 // Check Reset Cycle
+                 if($mission->reset_cycle == 'daily') {
+                     // If completed date is NOT today (YYYYMMDD...)
+                     if(substr($progress->completed_date, 0, 8) != $today) {
+                         $do_reset = true;
+                     }
+                 }
+                 
+                 if($do_reset) {
+                     file_put_contents($path, "      Resetting Mission Progress (Cycle: {$mission->reset_cycle})\n", FILE_APPEND);
+                     $progress->is_completed = 'N';
+                     $progress->progress_data = '{}';
+                     $current_data = []; // Reset local data
+                 } else {
+                     file_put_contents($path, "      Skipping (Completed)\n", FILE_APPEND);
+                     continue;
+                 }
             }
             
             $current_data = json_decode($progress->progress_data, true);

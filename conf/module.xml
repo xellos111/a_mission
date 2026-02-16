@@ -17,6 +17,9 @@
         <action name="dispA_missionAdminMemberMissions" type="view" standalone="true" />
     </actions>
     <triggers>
+        <trigger name="member.doLogin" module="a_mission" type="controller" target="triggerAfterLogin" after="after" />
+        <trigger name="document.insertDocument" module="a_mission" type="controller" target="triggerAfterInsertDocument" after="after" />
+        <trigger name="comment.insertComment" module="a_mission" type="controller" target="triggerAfterInsertComment" after="after" />
         <trigger name="document.updateVotedCount" module="a_mission" type="controller" target="triggerDocumentVoted" after="after" />
         <trigger name="comment.updateVotedCount" module="a_mission" type="controller" target="triggerCommentVoted" after="after" />
     </triggers>
