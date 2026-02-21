@@ -109,14 +109,10 @@ class a_missionController extends a_mission
      */
     function checkMission($trigger_type, $member_srl, $extra_condition = [])
     {
-        $path = dirname(__FILE__) . '/debug_mission_vote.txt';
-        file_put_contents($path, "\n" . date('Y-m-d H:i:s') . " checkMission START ($trigger_type, $member_srl)\n", FILE_APPEND);
         $oModel = getModel('a_mission');
 
         // 1. Get Active Missions
         $mission_list = $oModel->getActiveMissionsByTrigger($trigger_type);
-        
-        file_put_contents($path, " > checkMission ($trigger_type, $member_srl): Found " . ($mission_list ? count($mission_list) : 0) . " missions\n", FILE_APPEND);
         
         if (!$mission_list)
             return new BaseObject();
@@ -128,9 +124,6 @@ class a_missionController extends a_mission
             // ... (rest of logic) ...
             $conditions = json_decode($mission->conditions, true);
             if (!$conditions) continue;
-
-            // Log checking specific mission
-            file_put_contents($path, "   >> Checking Mission {$mission->mission_srl} (Title: {$mission->title})\n", FILE_APPEND);
 
             // 2. Load Progress
             $progress = $oModel->getMissionProgress($mission->mission_srl, $member_srl);
@@ -162,12 +155,10 @@ class a_missionController extends a_mission
                  }
                  
                  if($do_reset) {
-                     file_put_contents($path, "      Resetting Mission Progress (Cycle: {$mission->reset_cycle})\n", FILE_APPEND);
                      $progress->is_completed = 'N';
                      $progress->progress_data = '{}';
                      $current_data = []; // Reset local data
                  } else {
-                     file_put_contents($path, "      Skipping (Completed)\n", FILE_APPEND);
                      continue;
                  }
             }
@@ -194,8 +185,6 @@ class a_missionController extends a_mission
                     $c_count = (int)$c_val;
                 }
                 
-                file_put_contents($path, "      Condition Key: $c_key / Type: $c_type / Target: $trigger_type\n", FILE_APPEND);
-
                 if($c_type == $trigger_type) {
                      // Check Logic
                      $match = true;
@@ -228,7 +217,6 @@ class a_missionController extends a_mission
                      
                      if($match) {
                          // Increment Progress for this SPECIFIC condition key
-                         file_put_contents($path, "      MATCHED! Incrementing...\n", FILE_APPEND);
                          
                          if (!isset($current_data[$c_key])) $current_data[$c_key] = 0;
                          
@@ -236,8 +224,6 @@ class a_missionController extends a_mission
                             $current_data[$c_key]++;
                             $updated = true;
                          }
-                     } else {
-                         file_put_contents($path, "      NO MATCH: $log_fail_reason\n", FILE_APPEND);
                      }
                 }
             }
@@ -274,7 +260,6 @@ class a_missionController extends a_mission
                 
                 // Add Ticket with logging
                 $log_msg = "Mission Reward: " . $mission->title . " (Srl: " . $mission->mission_srl . ")";
-                file_put_contents($path, "      [SUCCESS] All Cleared! Awarding Tickets. Msg: $log_msg\n", FILE_APPEND);
                 
                 $this->addTicket($member_srl, $mission->reward_tickets, $log_msg);
             }
@@ -291,16 +276,14 @@ class a_missionController extends a_mission
                 // Update
                 $progress->progress_srl = $check->data->progress_srl;
                 $output = executeQuery('a_mission.updateProgress', $progress);
-                file_put_contents($path, "      [SAVE] Updated Progress (ID: {$progress->progress_srl}, Completed: {$progress->is_completed})\n", FILE_APPEND);
             } else {
                 // Insert
                 $progress->progress_srl = getNextSequence();
                 $output = executeQuery('a_mission.insertProgress', $progress);
-                file_put_contents($path, "      [SAVE] Inserted Progress (ID: {$progress->progress_srl}, Completed: {$progress->is_completed})\n", FILE_APPEND);
             }
             
             if(!$output->toBool()) {
-                 file_put_contents($path, "      [ERROR] DB Save Failed\n", FILE_APPEND);
+                 // DB Save Failed
             }
         }
 
